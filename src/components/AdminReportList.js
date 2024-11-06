@@ -42,7 +42,7 @@ const AdminReportList = () => {
     setError(null);
 
     try {
-      const response = await axios.get('http://localhost:8000/posts/admin/reports/', {
+      const response = await axios.get('http://3.92.22.96/posts/admin/reports/', {
         params: {
           page: currentPage,
           search: searchQuery,
@@ -97,7 +97,7 @@ const AdminReportList = () => {
   const handleAction = async (reportId, action) => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/posts/admin/reports/${reportId}/action/`,
+        `http://3.92.22.96/posts/admin/reports/${reportId}/action/`,
         { action },
         {
           headers: {
