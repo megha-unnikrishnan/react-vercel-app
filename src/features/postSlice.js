@@ -14,7 +14,7 @@ export const createPost = createAsyncThunk(
       const token = localStorage.getItem('token'); // Adjust based on where your token is stored
 
       // Include token in headers if available
-      const response = await axios.post('http://localhost:8000/posts/post-create/', formData, {
+      const response = await axios.post('http://3.92.22.96/posts/post-create/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}` // Add the token here
@@ -39,7 +39,7 @@ export const fetchPosts = createAsyncThunk(
   async (postIds, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/posts/fetch-posts/', {
+      const response = await axios.get('http://3.92.22.96/posts/fetch-posts/', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -80,7 +80,7 @@ export const editPost = createAsyncThunk(
   async ({ postId, updatedData }) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.put(`http://localhost:8000/posts/posts-detail/${postId}/`, updatedData, {
+      const response = await axios.put(`http://3.92.22.96/posts/posts-detail/${postId}/`, updatedData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ export const deletePost = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
 
-      await axios.delete(`http://localhost:8000/posts/posts-detail/${postId}/`, {
+      await axios.delete(`http://3.92.22.96/posts/posts-detail/${postId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -125,7 +125,7 @@ export const fetchUserPosts = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token'); // Get token from localStorage
-      const response = await axios.get(`http://localhost:8000/posts/users-posts/${userId}/`, {
+      const response = await axios.get(`http://3.92.22.96/posts/users-posts/${userId}/`, {
         headers: {
           'Authorization': `Bearer ${token}` // Include token in the request header
         },
@@ -148,7 +148,7 @@ export const fetchUserPostsDetails = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token'); // Get token from localStorage
-      const response = await axios.get(`http://localhost:8000/posts/users-post-profile/${userId}/`, {
+      const response = await axios.get(`http://3.92.22.96/posts/users-post-profile/${userId}/`, {
         headers: {
           'Authorization': `Bearer ${token}` // Include token in the request header
         },
@@ -170,7 +170,7 @@ export const fetchUserPostsDetails = createAsyncThunk(
 
 export const likePost = createAsyncThunk('posts/likePost', async (postId, { rejectWithValue }) => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`http://localhost:8000/posts/posts-like/${postId}/like/`, {
+  const response = await fetch(`http://3.92.22.96/posts/posts-like/${postId}/like/`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ export const likePost = createAsyncThunk('posts/likePost', async (postId, { reje
 
 export const unlikePost = createAsyncThunk('posts/unlikePost', async (postId, { rejectWithValue }) => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`http://localhost:8000/posts/posts-unlike/${postId}/unlike/`, {
+  const response = await fetch(`http://3.92.22.96/posts/posts-unlike/${postId}/unlike/`, {
       method: 'DELETE',
       headers: {
           'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ export const listLikes = createAsyncThunk(
   async (postId, { rejectWithValue }) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:8000/postslikeslist/${postId}/likes/`, {
+      const response = await fetch(`http://3.92.22.96/postslikeslist/${postId}/likes/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ export const listLikes = createAsyncThunk(
 export const createBookmark = createAsyncThunk('posts/createBookmark', async (postId, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
-    await axios.post(`http://localhost:8000/posts/bookmark/${postId}/`, {}, {
+    await axios.post(`http://3.92.22.96/posts/bookmark/${postId}/`, {}, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -258,7 +258,7 @@ export const deleteBookmark = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `http://localhost:8000/posts/bookmarks/${postId}/`, 
+        `http://3.92.22.96/posts/bookmarks/${postId}/`, 
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -277,7 +277,7 @@ export const fetchBookmarks = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/posts/bookmarks/', {
+      const response = await axios.get('http://3.92.22.96/posts/bookmarks/', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -302,7 +302,7 @@ export const createComment = createAsyncThunk(
       console.log('Token before request:', token);
 
       const response = await axios.post(
-        `http://localhost:8000/posts/posts-comments-create/${postId}/comments/`,
+        `http://3.92.22.96/posts/posts-comments-create/${postId}/comments/`,
         {
           content,
           parent: parent || null, // Pass null if there's no parent
@@ -340,7 +340,7 @@ export const fetchComments = createAsyncThunk(
 
     // console.log(`Fetching comments for postId: ${postId}`); // Log postId
 
-    const response = await axios.get(`http://localhost:8000/posts/comments-list/${postId}/`, {
+    const response = await axios.get(`http://3.92.22.96/posts/comments-list/${postId}/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`, // Replace with your actual token logic
       },
@@ -357,7 +357,7 @@ export const deleteComment = createAsyncThunk(
   'posts/deleteComment',
   async ({ commentId, postId, token }, { rejectWithValue }) => {
     
-      const response = await fetch(`http://localhost:8000/posts/delete/comments/${commentId}/`, {
+      const response = await fetch(`http://3.92.22.96/posts/delete/comments/${commentId}/`, {
       
           method: 'DELETE',
           headers: {
