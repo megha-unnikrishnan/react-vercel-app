@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const FollowingPage = () => {
   const dispatch = useDispatch();
   const { following, loading, error } = useSelector((state) => state.followers);
-  const BASE_URL = 'http://localhost:8000';
+  const BASE_URL = 'http://3.92.22.96/';
 
   useEffect(() => {
     console.log('Fetching data...');
