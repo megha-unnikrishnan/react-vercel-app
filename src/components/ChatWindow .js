@@ -7,7 +7,7 @@ const ChatWindow = ({ selectedUser }) => {
     const [messageContent, setMessageContent] = useState('');
 
     const fetchMessages = async () => {
-        const response = await axios.get(`http://localhost:8000/posts/messages/?recipient_id=${selectedUser.id}`);
+        const response = await axios.get(`http://3.92.22.96/posts/messages/?recipient_id=${selectedUser.id}`);
         setMessages(response.data);
     };
 
@@ -23,7 +23,7 @@ const ChatWindow = ({ selectedUser }) => {
                 content: messageContent,
             };
 
-            await axios.post('http://localhost:8000/posts/messages/create/', newMessage);
+            await axios.post('http://3.92.22.96/posts/messages/create/', newMessage);
             setMessageContent('');
             fetchMessages();  // Refresh messages after sending
         }
