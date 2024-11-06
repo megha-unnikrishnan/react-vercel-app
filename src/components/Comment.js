@@ -15,7 +15,7 @@ import CommentForm from './CommentForm';
 import axios from 'axios';
 
 
-const BASE_URL = 'http://localhost:8000/posts';
+const BASE_URL = 'http://3.92.22.96/posts';
 
 const Comment = ({ comment, postId, replies, onReplySubmit }) => {
   const dispatch = useDispatch();
