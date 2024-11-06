@@ -38,7 +38,7 @@ const FriendUserProfile = () => {
     }
   }, [likedPosts, dispatch, userId]);
 
-  const BASE_URL = 'http://localhost:8000';
+  const BASE_URL = 'http://3.92.22.96/';
   const postdetails = useSelector((state) => state.posts.postdetails);
   const profile = useSelector((state) => state.posts.profile);
 
