@@ -11,7 +11,7 @@ const VerifyEmail = () => {
   // Define verifyEmail as a memoized callback
   const verifyEmail = useCallback(async (userId, token) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/api/verify-email/${userId}/${token}/`);
+      const response = await axios.get(`http://3.92.22.96/api/api/verify-email/${userId}/${token}/`);
       console.log('Email verified successfully:', response.data);
       setMessage(response.data.message || 'Email verified successfully'); // Use the message from the response
       setTimeout(() => {
