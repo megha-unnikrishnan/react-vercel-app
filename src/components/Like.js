@@ -13,7 +13,7 @@ const Like = ({ postId }) => {
         const fetchPostLikes = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await fetch(`http://localhost:8000/posts/postslikeslist/${postId}/likes/`, {
+                const response = await fetch(`http://3.92.22.96/posts/postslikeslist/${postId}/likes/`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const Like = ({ postId }) => {
     const handleLike = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`http://localhost:8000/posts/posts-like/${postId}/like/`, {
+            const response = await fetch(`http://3.92.22.96/posts/posts-like/${postId}/like/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -67,7 +67,7 @@ const Like = ({ postId }) => {
     const handleUnlike = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`http://localhost:8000/posts/posts-unlike/${postId}/unlike/`, {
+            const response = await fetch(`http://3.92.22.96/posts/posts-unlike/${postId}/unlike/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
