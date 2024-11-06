@@ -26,7 +26,7 @@ const FlagPost = ({ postId, postAuthorId }) => {
 
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/posts/reports/${postId}/`,
+                    `http://3.92.22.96/posts/reports/${postId}/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const FlagPost = ({ postId, postAuthorId }) => {
 
         try {
             await axios.post(
-                'http://localhost:8000/posts/reports/',
+                'http://3.92.22.96/posts/reports/',
                 {
                     post: postId,
                     reason: reason,
