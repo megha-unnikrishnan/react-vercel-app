@@ -11,7 +11,7 @@ const PostDetails = () => {
   useEffect(() => {
     const fetchPost = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:8000/posts/fetch-posts/${id}/`, {
+      const response = await axios.get(` http://3.92.22.96/posts/fetch-posts/${id}/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPost(response.data);
