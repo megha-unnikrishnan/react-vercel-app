@@ -81,7 +81,7 @@ const handleCallRejected = () => {
   const fetchUserDetails = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:8000/posts/users/${userId}/`, {
+      const response = await axios.get(`http://3.92.22.96/posts/users/${userId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +100,7 @@ const handleCallRejected = () => {
   const fetchMessages = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:8000/posts/messages/${userId}/`, {
+      const response = await axios.get(`http://3.92.22.96/posts/messages/${userId}/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Fetched Messages:", response.data); // Debugging log
@@ -139,7 +139,7 @@ const handleCallRejected = () => {
   //     }
   
   //     const response = await axios.put(
-  //       `http://localhost:8000/posts/messages/${messageId}/edit/`, 
+  //       `http://3.92.22.96/posts/messages/${messageId}/edit/`, 
   //       formData,
   //       {
   //         headers: {
@@ -208,7 +208,7 @@ const handleCallRejected = () => {
   //   try {
   //     const token = localStorage.getItem('token');
   //     await axios.delete(
-  //       `http://localhost:8000/posts/messages/${messageId}/delete/`, 
+  //       `http://3.92.22.96/posts/messages/${messageId}/delete/`, 
   //       {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
@@ -235,7 +235,8 @@ const handleCallRejected = () => {
   const establishWebSocketConnection = () => {
     const token = localStorage.getItem('token');
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const ws = new WebSocket(`${wsProtocol}://localhost:8000/chat/${userId}/?token=${token}`);
+    const ws = new WebSocket(`${wsProtocol}://3.92.22.96/chat/${userId}/?token=${token}`);
+  
     setSocket(ws);
   
     ws.onmessage = (event) => {
