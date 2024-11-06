@@ -24,7 +24,7 @@ export const fetchUserDetailsAdmin = createAsyncThunk(
     if (!token) {
       throw new Error('No token found in localStorage');
     }
-    const response = await axios.get('http://3.92.22.96/api/user-view/', {
+    const response = await axios.get('http://localhost:8000/api/user-view/', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -42,7 +42,7 @@ export const blockUser = createAsyncThunk(
     }
 
     try {
-      const response = await axios.post(`http://3.92.22.96/api/users/${userId}/block/`, null, {
+      const response = await axios.post(`http://localhost:8000/api/users/${userId}/block/`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,7 +68,7 @@ export const unblockUser = createAsyncThunk(
     }
 
     try {
-      const response = await axios.post(`http://3.92.22.96/api/users/${userId}/unblock/`, null, {
+      const response = await axios.post(`http://localhost:8000/api/users/${userId}/unblock/`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
