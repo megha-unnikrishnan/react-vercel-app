@@ -8,7 +8,7 @@ const FollowersPage = () => {
   const { followers, loading, error } = useSelector((state) => state.followers);
   console.log('followers', followers);
 
-  const BASE_URL = 'http://localhost:8000';
+  const BASE_URL = 'http://3.92.22.96/';
 
   useEffect(()=>{
     dispatch(fetchFollowers)
