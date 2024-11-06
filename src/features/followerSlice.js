@@ -9,7 +9,7 @@ export const followUser = createAsyncThunk(
   'followers/followUser',
   async (followedId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/follow/${followedId}/`, {
+      const response = await fetch(`http://3.92.22.96/api/follow/${followedId}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export const unfollowUser = createAsyncThunk(
   'followers/unfollowUser',
   async (followedId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/unfollow/${followedId}/`, {
+      const response = await fetch(`http://3.92.22.96/api/unfollow/${followedId}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const fetchFollowingandfollowers = createAsyncThunk(
         throw new Error('No token found');
       }
 
-      const response = await axios.get('http://localhost:8000/api/userdetail/', {
+      const response = await axios.get('http://3.92.22.96/api/userdetail/', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -99,7 +99,7 @@ export const fetchFollowing = createAsyncThunk(
   'followers/fetchFollowing',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/following/${userId}/`, {
+      const response = await fetch(http://3.92.22.96/api/following/${userId}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export const fetchFollowers = createAsyncThunk(
   'followers/fetchFollowing',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/followers/${userId}/`, {
+      const response = await fetch(`http://3.92.22.96/api/followers/${userId}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
