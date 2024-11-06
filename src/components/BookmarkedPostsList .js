@@ -13,7 +13,7 @@ import MessageIcon from './MessageIcon';
 import { useSelector } from 'react-redux';
 const BookmarkedPosts = () => {
   const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
-  const BASE_URL = 'http://localhost:8000';
+  const BASE_URL = 'http://3.92.22.96';
   const dispatch = useDispatch();
   const [likedPosts, setLikedPosts] = useState([]);
   const loggedInUser = useSelector((state) => state.auth.user); 
@@ -25,7 +25,7 @@ const BookmarkedPosts = () => {
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/posts/bookmarks/', {
+        const response = await axios.get('http://3.92.22.96/posts/bookmarks/', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -74,7 +74,7 @@ const BookmarkedPosts = () => {
   // Function to remove bookmark
   const removeBookmark = async (postId) => {
     try {
-      await axios.delete(`http://localhost:8000/posts/bookmarks/${postId}/`, {
+      await axios.delete(`http://3.92.22.96/posts/bookmarks/${postId}/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
