@@ -15,7 +15,7 @@ const EngagementMetrics = () => {
         const fetchEngagementMetrics = async () => {
             try {
                 const token = localStorage.getItem('token'); // Get the token from localStorage
-                const response = await axios.get('http://localhost:8000/api/engagement_metrics/', {
+                const response = await axios.get('http://3.92.22.96/api/engagement_metrics/', {
                     headers: {
                         Authorization: `Bearer ${token}` // Include the Authorization header
                     }
