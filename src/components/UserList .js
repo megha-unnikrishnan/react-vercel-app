@@ -9,7 +9,7 @@ const UserList = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await axios.get('http://localhost:8000/api/users/'); // Update API endpoint for users
+            const response = await axios.get('http://3.92.22.96/api/users/'); // Update API endpoint for users
             setUsers(response.data);
         };
 
