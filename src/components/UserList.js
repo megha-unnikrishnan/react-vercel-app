@@ -42,7 +42,7 @@ const UserList = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8000/api/user-view/', {
+            const response = await axios.get(' http://3.92.22.96/api/user-view/', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const updatedUsers = response.data.map(user => ({
@@ -67,7 +67,7 @@ const UserList = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`http://localhost:8000/api/user-list-find/?q=${searchTerm}`, {
+            const response = await axios.get(` http://3.92.22.96/api/user-list-find/?q=${searchTerm}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setFilteredUsers(response.data);
@@ -100,7 +100,7 @@ const UserList = () => {
         setLoadingBlock(true);
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:8000/api/users/${userId}/block/`, {}, {
+            await axios.post(` http://3.92.22.96/api/users/${userId}/block/`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUsers(users.map(user => (user.id === userId ? { ...user, is_suspended: true } : user)));
@@ -116,7 +116,7 @@ const UserList = () => {
         setLoadingUnblock(true);
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:8000/api/users/${userId}/unblock/`, {}, {
+            await axios.post(` http://3.92.22.96/api/users/${userId}/unblock/`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUsers(users.map(user => (user.id === userId ? { ...user, is_suspended: false } : user)));
