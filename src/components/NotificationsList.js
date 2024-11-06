@@ -32,7 +32,7 @@ const NotificationPopover = () => {
   console.log('fetch',fetchNotifications);
   
 
-  const baseUrl = "http://localhost:8000"; 
+  const baseUrl = "http://3.92.22.96"; 
 
   // Update local notifications whenever the notifications state changes
   useEffect(() => {
@@ -48,8 +48,8 @@ const NotificationPopover = () => {
   // Setup WebSocket connection for real-time notifications
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const wsUrl = `ws://localhost:8000/ws/notifications/?token=${token}`;
-  
+    const wsUrl = `ws://http://3.92.22.96/ws/notifications/?token=${token}`;
+ 
     ws.current = new WebSocket(wsUrl);
   
     ws.current.onopen = () => {
@@ -105,7 +105,7 @@ const NotificationPopover = () => {
   const handleNotificationClick = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch('http://localhost:8000/api/notifications/mark-all-read/', {}, {
+      await axios.patch(' http://3.92.22.96/api/notifications/mark-all-read/', {}, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
