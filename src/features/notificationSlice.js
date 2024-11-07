@@ -11,7 +11,7 @@ export const fetchNotifications = createAsyncThunk(
     }
 
     try {
-      const response = await axios.get('http://3.92.22.96/api/notifications/', {
+      const response = await axios.get('https://talkstream.xyz/api/notifications/', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -34,7 +34,7 @@ export const markAsRead = createAsyncThunk(
     }
 
     try {
-      const response = await axios.patch(`http://3.92.22.96/api/notifications/${notificationId}/`, { 
+      const response = await axios.patch(`https://talkstream.xyz/api/notifications/${notificationId}/`, { 
         is_read: true  // Set is_read to true in the request body
       }, {
         headers: {
