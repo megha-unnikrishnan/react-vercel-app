@@ -37,7 +37,7 @@ const AdminDashboard = () => {
     const fetchUserCount = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://3.92.22.96/api/user-count/', {
+        const response = await fetch('https://talkstream.xyz/api/user-count/', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}` // Corrected this line
