@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useState, useEffect, useRef } from 'react'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNotifications } from '../features/notificationSlice';
@@ -28,11 +23,10 @@ const NotificationPopover = () => {
     dispatch(fetchNotifications());
   }, [dispatch]);
 
-
   console.log('fetch',fetchNotifications);
   
-
-  const baseUrl = "https://talkstream.xyz"; 
+  // Update base URL to the new one
+  const baseUrl = "https://react-vercel-app-gules.vercel.app"; 
 
   // Update local notifications whenever the notifications state changes
   useEffect(() => {
@@ -48,16 +42,14 @@ const NotificationPopover = () => {
   // Setup WebSocket connection for real-time notifications
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const wsUrl = `wss://talkstream.xyz/ws/notifications/?token=${token}`;
- 
+    const wsUrl = `wss://react-vercel-app-gules.vercel.app/ws/notifications/?token=${token}`; // Updated to use wss (secure WebSocket)
+  
     ws.current = new WebSocket(wsUrl);
   
     ws.current.onopen = () => {
       console.log('WebSocket connection established');
     };
   
-    
-
     ws.current.onmessage = (event) => {
       const newNotification = JSON.parse(event.data);
       console.log('Received Notification:', newNotification);
@@ -75,7 +67,6 @@ const NotificationPopover = () => {
     
       // Add the new notification to the local state
       setLocalNotifications((prevNotifications) => {
-        
         console.log('Previous Notifications:', prevNotifications);
         const updatedNotifications = [updatedNotification, ...prevNotifications];
         console.log('Updated Notifications:', updatedNotifications);
@@ -105,7 +96,7 @@ const NotificationPopover = () => {
   const handleNotificationClick = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch('https://talkstream.xyz/api/notifications/mark-all-read/', {}, {
+      await axios.patch('https://react-vercel-app-gules.vercel.app/api/notifications/mark-all-read/', {}, { // Updated to use the new base URL
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -184,7 +175,6 @@ const NotificationPopover = () => {
           {status === 'failed' && <div className="text-center py-4 text-red-500">Error: {error}</div>}
           {console.log('Notifications:', localNotifications)}
           {localNotifications.length === 0 ? (
-          
             <div className="p-4 text-gray-600">No notifications yet.</div>
           ) : (
             <ul className="divide-y divide-gray-200">
@@ -196,16 +186,13 @@ const NotificationPopover = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                    <img
-                          // src={notification.sender.profile_picture}
-                          // src={notification.sender.profilePictureUrl}
-                          src={notification.profilePictureUrl} 
-                          alt="Profile"
-                          className="w-8 h-8 rounded-full mr-2"
-                        />
-                         {console.log('image',notification.profilePictureUrl)}
+                      <img
+                        src={notification.profilePictureUrl} 
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full mr-2"
+                      />
+                      {console.log('image',notification.profilePictureUrl)}
                       <div className="text-sm">
-                        {/* <p className="font-semibold">{notification.sender.first_name}</p> */}
                         <p>{notification.message}</p>
                       </div>
                     </div>
