@@ -56,39 +56,47 @@ const PostFeed = () => {
     dispatch(fetchUserDetails());
   }, [dispatch]);
 
+  
+  
   const fetchPostsCallback = useCallback(async (page) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
+  setLoading(true);
+  try {
+    const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    // Debugging: Log the full response to check its structure
+    console.log('API Response:', response.data);
+
+    // Check if response.data exists and contains a 'results' property
+    if (response.data && Array.isArray(response.data.results)) {
+      setPosts((prevPosts) => {
+        const newPosts = response.data.results;
+        const combinedPosts = [...prevPosts, ...newPosts];
+        const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
+        return uniquePosts;
       });
 
-      // Check if response data exists and is valid
-      if (response.data && Array.isArray(response.data.results)) {
-        setPosts((prevPosts) => {
-          const newPosts = response.data.results;
-          const combinedPosts = [...prevPosts, ...newPosts];
-          const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
-          return uniquePosts;
-        });
+      setTotalPages(Math.ceil(response.data.count / 10));
 
-        setTotalPages(Math.ceil(response.data.count / 10));
-
-        if (page >= Math.ceil(response.data.count / 10)) {
-          setHasMore(false);
-        }
-      } else {
-        setError('Unexpected data format received.');
+      if (page >= Math.ceil(response.data.count / 10)) {
+        setHasMore(false);
       }
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      setError('Error fetching posts');
-    } finally {
-      setLoading(false);
+    } else {
+      // If the format doesn't match, log it for inspection
+      console.error('Unexpected data format received:', response.data);
+      setError('Unexpected data format received.');
     }
-  }, []);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    setError('Error fetching posts');
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
 
   useEffect(() => {
     fetchPostsCallback(currentPage);
