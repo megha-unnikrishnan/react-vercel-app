@@ -63,7 +63,7 @@ useEffect(() => {
   const fetchPostsCallback = useCallback(async (page) => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://talkstream.xyz/posts/fetch-all-posts/?page=${page}`, {
+      const response = await axios.get(`https://talkstream.xyz/posts/fetch-all-posts/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
