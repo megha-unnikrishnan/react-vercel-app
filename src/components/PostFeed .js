@@ -67,10 +67,12 @@ const PostFeed = () => {
       },
     });
 
-    // Debugging: Log the full response to check its structure
-    console.log('API Response:', response.data);
+    // Check if response data is an HTML string
+    if (typeof response.data === 'string' && response.data.startsWith('<!DOCTYPE html>')) {
+      throw new Error('Received HTML response instead of JSON');
+    }
 
-    // Check if response.data exists and contains a 'results' property
+    // Now handle the JSON response as expected
     if (response.data && Array.isArray(response.data.results)) {
       setPosts((prevPosts) => {
         const newPosts = response.data.results;
@@ -85,7 +87,6 @@ const PostFeed = () => {
         setHasMore(false);
       }
     } else {
-      // If the format doesn't match, log it for inspection
       console.error('Unexpected data format received:', response.data);
       setError('Unexpected data format received.');
     }
@@ -96,6 +97,7 @@ const PostFeed = () => {
     setLoading(false);
   }
 }, []);
+
 
 
   useEffect(() => {
