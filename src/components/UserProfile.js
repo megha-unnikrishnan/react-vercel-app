@@ -67,20 +67,6 @@ const UserProfile = () => {
   const canvasRef = useRef(null); // Reference for the canvas
   const [searchTerm, setSearchTerm] = useState('');
   
-   
- 
-//   const following = useSelector((state) => state.followers.following);
-// const followingCount = following.length;
-  
-// useEffect(() => {
-//   const token = localStorage.getItem('token');
-//   if (!token) {
-//     navigate('/');
-//   }
-// }, [navigate]);
-
-
-
 const following = useSelector((state) => state.followers.following);
 const [followingCount, setFollowingCount] = useState(following.length);
 
@@ -158,15 +144,6 @@ const onImageCropComplete = (crop) => {
   
 
 
-  // const handleProfilePicChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     setProfilePreview(URL.createObjectURL(file));
-  //     setCropProfile(true);
-  //   }
-  // };
-
-
 
   const handleProfilePicChange = async (event) => {
     const file = event.target.files[0];
@@ -225,55 +202,7 @@ const onImageCropComplete = (crop) => {
   };
   
   
-  // const cropCoverPhoto = () => {
-  //   if (coverCropperRef.current) {
-  //     const cropper = coverCropperRef.current?.cropper;
-  //     if (cropper) {
-  //       // Set the desired width for the cropped image
-  //       const desiredWidth = 800; // Change this to your desired width
-  //       const aspectRatio = cropper.getData().width / cropper.getData().height; // Maintain the aspect ratio
-  
-  //       // Calculate the new height based on the aspect ratio
-  //       const newHeight = desiredWidth / aspectRatio;
-  
-  //       // Get the cropped canvas with the new dimensions
-  //       const croppedCanvas = cropper.getCroppedCanvas({
-  //         width: desiredWidth,
-  //         height: newHeight,
-  //       });
-  
-  //       if (croppedCanvas) {
-  //         const croppedImage = croppedCanvas.toDataURL();
-  //         setCoverPhoto(croppedImage);
-  //         setCoverPreview(croppedImage);
-  //         setCropCover(false);
-  
-  //         const formData = new FormData();
-  //         formData.append('cover_picture', croppedImage);
-  //         dispatch(updatePictures(formData));
-  //       }
-  //     }
-  //   }
-  // };
-  
-  // const cropProfilePic = () => {
-  //   if (profileCropperRef.current) {
-  //     const cropper = profileCropperRef.current?.cropper;
-  //     if (cropper) {
-  //       const croppedCanvas = cropper.getCroppedCanvas();
-  //       if (croppedCanvas) {
-  //         const croppedImage = croppedCanvas.toDataURL();
-  //         setProfilePic(croppedImage);
-  //         setProfilePreview(croppedImage);
-  //         setCropProfile(false);
 
-  //         const formData = new FormData();
-  //         formData.append('profile_picture', croppedImage);
-  //         dispatch(updatePictures(formData));
-  //       }
-  //     }
-  //   }
-  // };
 
   const cropProfilePic = async () => {
     if (profileCropperRef.current) {
