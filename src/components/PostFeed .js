@@ -1,4 +1,8 @@
-import axios from 'axios'; 
+
+
+
+
+import axios from 'axios';
 import SideBar from './SideBar';
 import { FaRegThumbsUp } from 'react-icons/fa';
 import CommentList from './CommentList';
@@ -13,7 +17,6 @@ import MessageIcon from './MessageIcon';
 import SkeletonLoader from './SkeletonLoader'; 
 import FlagPost from './FlagPost';
 import { useNavigate } from 'react-router-dom';
-
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
@@ -23,16 +26,16 @@ const PostFeed = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate=useNavigate()
   const loggedInUser = useSelector((state) => state.auth.user); 
   const username = loggedInUser ? loggedInUser.first_name : null;
   const errors = useSelector((state) => state.auth.error);
 
-  useEffect(() => {
-    if (errors === 'Your account has been blocked by the admin.') {
-      alert(errors); // or display a message in the UI
-    }
-  }, [errors]);
+useEffect(() => {
+  if (errors === 'Your account has been blocked by the admin.') {
+    alert(errors); // or display a message in the UI
+  }
+}, [error]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,6 +43,7 @@ const PostFeed = () => {
       navigate('/');
     }
   }, [navigate]);
+
 
   useEffect(() => {
     const storedLikedPosts = localStorage.getItem('likedPosts');
@@ -56,63 +60,47 @@ const PostFeed = () => {
     dispatch(fetchUserDetails());
   }, [dispatch]);
 
-  
-  
   const fetchPostsCallback = useCallback(async (page) => {
-  setLoading(true);
-  try {
-    const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-
-    // Check if response data is an HTML string
-    if (typeof response.data === 'string' && response.data.startsWith('<!DOCTYPE html>')) {
-      throw new Error('Received HTML response instead of JSON');
-    }
-
-    // Now handle the JSON response as expected
-    if (response.data && Array.isArray(response.data.results)) {
+    setLoading(true);
+    try {
+      const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       setPosts((prevPosts) => {
         const newPosts = response.data.results;
         const combinedPosts = [...prevPosts, ...newPosts];
         const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
         return uniquePosts;
       });
-
       setTotalPages(Math.ceil(response.data.count / 10));
-
       if (page >= Math.ceil(response.data.count / 10)) {
         setHasMore(false);
       }
-    } else {
-      console.error('Unexpected data format received:', response.data);
-      setError('Unexpected data format received.');
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setError('Error fetching posts');
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    setError('Error fetching posts');
-  } finally {
-    setLoading(false);
-  }
-}, []);
-
-
-
+  }, []);
+  
   useEffect(() => {
     fetchPostsCallback(currentPage);
   }, [currentPage, fetchPostsCallback]);
 
   const handleLikeToggle = (post) => {
     const isLiked = likedPosts.includes(post.id);
-
-    const newLikedPosts = isLiked
+  
+    const newLikedPosts = isLiked 
       ? likedPosts.filter(id => id !== post.id) // Unlike
       : [...likedPosts, post.id]; // Like
 
+    // Update likedPosts state immediately
     setLikedPosts(newLikedPosts);
-
+    
+    // Update post's like count immediately
     const updatedPosts = posts.map(p => {
       if (p.id === post.id) {
         return {
@@ -124,8 +112,10 @@ const PostFeed = () => {
     });
     setPosts(updatedPosts);
 
+    // Dispatch the appropriate action
     const action = isLiked ? unlikePost(post.id) : likePost(post.id);
     dispatch(action).then(() => {
+      // Optionally refresh posts after liking/unliking
       dispatch(fetchPosts());
     });
   };
