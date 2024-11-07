@@ -32,7 +32,7 @@ const NotificationPopover = () => {
   console.log('fetch',fetchNotifications);
   
 
-  const baseUrl = "http://3.92.22.96"; 
+  const baseUrl = "https://talkstream.xyz"; 
 
   // Update local notifications whenever the notifications state changes
   useEffect(() => {
@@ -48,7 +48,7 @@ const NotificationPopover = () => {
   // Setup WebSocket connection for real-time notifications
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const wsUrl = `ws://http://3.92.22.96/ws/notifications/?token=${token}`;
+    const wsUrl = `ws://https://talkstream.xyz/ws/notifications/?token=${token}`;
  
     ws.current = new WebSocket(wsUrl);
   
@@ -105,7 +105,7 @@ const NotificationPopover = () => {
   const handleNotificationClick = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(' http://3.92.22.96/api/notifications/mark-all-read/', {}, {
+      await axios.patch('https://talkstream.xyz/api/notifications/mark-all-read/', {}, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
