@@ -11,7 +11,7 @@ const TopUsers = () => {
             try {
                 const token = localStorage.getItem('token');
 
-                const response = await axios.get(' http://3.92.22.96/api/top-users/', {
+                const response = await axios.get('https://talkstream.xyz/api/top-users/', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
