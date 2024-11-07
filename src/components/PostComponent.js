@@ -159,7 +159,7 @@ const PostComponent = ({ onSuccess },{ postId }) => {
 
   const { profile, status, error } = useSelector((state) => state.auth);
   console.log(profile);
-  const BASE_URL = ' http://3.92.22.96';
+  const BASE_URL = 'https://talkstream.xyz';
   
 
   const firstName = userspost?.first_name; // Optional chaining to safely access first_name
@@ -428,7 +428,7 @@ const handleKeyDown = async (e) => {
 
 
 
-const API_URL = ' http://3.92.22.96/posts/hashtags/'; // Adjust to your backend API URL
+const API_URL = 'https://talkstream.xyz/posts/hashtags/'; // Adjust to your backend API URL
 
 const fetchTags = async (query) => {
     try {
@@ -468,7 +468,7 @@ const createHashtag = async (newTag) => {
   
   try {
     const token = localStorage.getItem('token'); // Get the token from localStorage
-    const response = await fetch(' http://3.92.22.96/posts/tags/create/', {
+    const response = await fetch('https://talkstream.xyz/posts/tags/create/', {
       
       method: 'POST',
       headers: {
