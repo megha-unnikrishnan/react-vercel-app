@@ -16,7 +16,7 @@ const MessageIcon = () => {
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://3.92.22.96/posts/users/', {
+            const response = await axios.get('https://talkstream.xyz/posts/users/', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
