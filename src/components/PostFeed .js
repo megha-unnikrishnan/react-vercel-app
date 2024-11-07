@@ -63,7 +63,7 @@ useEffect(() => {
   const fetchPostsCallback = useCallback(async (page) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8000/posts/fetch-all-posts/?page=${page}`, {
+      const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
