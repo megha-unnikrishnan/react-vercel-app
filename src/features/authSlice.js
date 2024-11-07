@@ -13,7 +13,7 @@ export const refreshAccessToken = async () => {
   }
 
   try {
-      const response = await axios.post('http://3.92.22.96/api/token/refresh/', {
+      const response = await axios.post('https://talkstream.xyz/api/token/refresh/', {
           refresh: refreshToken,
       });
 
@@ -27,7 +27,7 @@ export const refreshAccessToken = async () => {
 export const loginUser = createAsyncThunk(
   'auth/login',
   async ({ userData, isAdmin }, { rejectWithValue }) => {
-    const url = isAdmin ? 'http://3.92.22.96/api/admin/token/' : 'http://3.92.22.96/api/token/';
+    const url = isAdmin ? 'https://talkstream.xyz/api/admin/token/' : 'https://talkstream.xyz/api/token/';
     
     try {
       const response = await axios.post(url, userData);
@@ -58,7 +58,7 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://3.92.22.96/api/register/', formData, {
+      const response = await axios.post('https://talkstream.xyz/api/register/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -78,7 +78,7 @@ export const requestPasswordReset = createAsyncThunk(
   'auth/requestPasswordReset',
   async (email, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://3.92.22.96/api/reset-password-request/', { email });
+      const response = await axios.post('https://talkstream.xyz/api/reset-password-request/', { email });
       return response.data;
     } catch (err) {
       const errorMessage = err.response?.data || { detail: 'An unknown error occurred.' };
@@ -91,7 +91,7 @@ export const confirmPasswordReset = createAsyncThunk(
   'auth/confirmPasswordReset',
   async ({ token, password }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://3.92.22.96/api/reset-password/', {
+      const response = await axios.post('https://talkstream.xyz/api/reset-password/', {
         token,
         password
       });
@@ -114,7 +114,7 @@ export const googleLogin = createAsyncThunk(
     console.log('googleLogin action dispatched with idToken:', idToken);
 
     try {
-      const response = await axios.post('http://3.92.22.96/api/auth/google/', { idToken });
+      const response = await axios.post('https://talkstream.xyz/api/auth/google/', { idToken });
       
       // Update the token in local storage
       localStorage.setItem('token', response.data.token);
@@ -152,7 +152,7 @@ export const updateProfile = createAsyncThunk(
   async (formData) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.put('http://3.92.22.96/api/profile/', formData, {
+      const response = await axios.put('https://talkstream.xyz/api/profile/', formData, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -176,7 +176,7 @@ export const updatePictures = createAsyncThunk(
   async (formData) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.post('http://3.92.22.96/api/update-pictures/', formData, {
+      const response = await axios.post('https://talkstream.xyz/api/update-pictures/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -203,7 +203,7 @@ export const searchUsers = createAsyncThunk(
     }
 
     try {
-      const response = await axios.get('http://3.92.22.96/api/search/', {
+      const response = await axios.get('https://talkstream.xyz/api/search/', {
         params: { query }, // Ensure that the backend expects a 'query' parameter
         headers: {
           Authorization: `Bearer ${token}`,
@@ -228,7 +228,7 @@ export const updatePassword = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        'http://3.92.22.96/api/change-password/',
+        'https://talkstream.xyz/api/change-password/',
         {
           old_password: oldPassword,
           new_password: newPassword,
@@ -263,7 +263,7 @@ export const fetchUserDetails = createAsyncThunk(
     }
 
     try {
-      const response = await axios.get('http://3.92.22.96/api/profile/', {
+      const response = await axios.get('https://talkstream.xyz/api/profile/', {
         headers: {
           Authorization: `Bearer ${token}`, // Correct Bearer token format
         },
@@ -289,7 +289,7 @@ export const fetchAllUsers = createAsyncThunk('user/fetchAllUsers', async () => 
   if (!token) {
     throw new Error('No token found');
   }
-  const response = await axios.get('http://3.92.22.96/api/user-view-follow/', {
+  const response = await axios.get('https://talkstream.xyz/api/user-view-follow/', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -304,7 +304,7 @@ export const fetchUserProfile = createAsyncThunk(
   'user/fetchUserProfile',
   async (userId) => {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`http://3.92.22.96/api/profile/${userId}/`, {
+    const response = await axios.get(`https://talkstream.xyz/api/profile/${userId}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -318,7 +318,7 @@ export const fetchUserPostProfile = createAsyncThunk(
   'user/fetchUserPostProfile',
   async (userId) => {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`http://3.92.22.96/api/profile/${userId}/`, {
+    const response = await axios.get(`https://talkstream.xyz/api/profile/${userId}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
