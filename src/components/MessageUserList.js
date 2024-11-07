@@ -6,7 +6,7 @@ const MessageUserList = ({ onSelectUser }) => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await axios.get('http://3.92.22.96/api/user-view/'); // Adjust endpoint as needed
+            const response = await axios.get('https://talkstream.xyz/api/user-view/'); // Adjust endpoint as needed
             setUsers(response.data);
         };
         fetchUsers();
