@@ -48,7 +48,7 @@ const NotificationPopover = () => {
   // Setup WebSocket connection for real-time notifications
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const wsUrl = `ws://https://talkstream.xyz/ws/notifications/?token=${token}`;
+    const wsUrl = `wss://https://talkstream.xyz/ws/notifications/?token=${token}`;
  
     ws.current = new WebSocket(wsUrl);
   
