@@ -26,7 +26,7 @@ const FlagPost = ({ postId, postAuthorId }) => {
 
             try {
                 const response = await axios.get(
-                    `http://3.92.22.96/posts/reports/${postId}/`,
+                    `https://talkstream.xyz/posts/reports/${postId}/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const FlagPost = ({ postId, postAuthorId }) => {
 
         try {
             await axios.post(
-                'http://3.92.22.96/posts/reports/',
+                'https://talkstream.xyz/posts/reports/',
                 {
                     post: postId,
                     reason: reason,
