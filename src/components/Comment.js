@@ -15,7 +15,7 @@ import CommentForm from './CommentForm';
 import axios from 'axios';
 
 
-const BASE_URL = 'http://3.92.22.96/posts';
+const BASE_URL = 'https://talkstream.xyz/posts';
 
 const Comment = ({ comment, postId, replies, onReplySubmit }) => {
   const dispatch = useDispatch();
