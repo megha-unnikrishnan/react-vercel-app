@@ -33,7 +33,7 @@ const UserGrowthChart = () => {
                     throw new Error('Authentication token not found. Please log in.');
                 }
 
-                const response = await axios.get(' http://3.92.22.96/api/user_growth/', {
+                const response = await axios.get('https://talkstream.xyz/api/user_growth/', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
