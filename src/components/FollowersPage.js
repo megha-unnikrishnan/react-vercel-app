@@ -8,7 +8,7 @@ const FollowersPage = () => {
   const { followers, loading, error } = useSelector((state) => state.followers);
   console.log('followers', followers);
 
-  const BASE_URL = 'http://3.92.22.96/';
+  const BASE_URL = 'https://talkstream.xyz/';
 
   useEffect(()=>{
     dispatch(fetchFollowers)
