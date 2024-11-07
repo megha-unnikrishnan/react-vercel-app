@@ -26,7 +26,7 @@ const ActivityFeed = () => {
                     throw new Error('No token found. Please log in.');
                 }
 
-                const response = await axios.get('http://3.92.22.96/api/activity-feed/', {
+                const response = await axios.get('https://talkstream.xyz/api/activity-feed/', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
