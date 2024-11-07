@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import SideBar from './SideBar';
 import { FaRegThumbsUp } from 'react-icons/fa';
@@ -13,7 +14,6 @@ import MessageIcon from './MessageIcon';
 import SkeletonLoader from './SkeletonLoader'; 
 import FlagPost from './FlagPost';
 import { useNavigate } from 'react-router-dom';
-
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
@@ -23,16 +23,16 @@ const PostFeed = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate=useNavigate()
   const loggedInUser = useSelector((state) => state.auth.user); 
   const username = loggedInUser ? loggedInUser.first_name : null;
   const errors = useSelector((state) => state.auth.error);
 
-  useEffect(() => {
-    if (errors === 'Your account has been blocked by the admin.') {
-      alert(errors); // or display a message in the UI
-    }
-  }, [error]);
+useEffect(() => {
+  if (errors === 'Your account has been blocked by the admin.') {
+    alert(errors); // or display a message in the UI
+  }
+}, [error]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,6 +40,7 @@ const PostFeed = () => {
       navigate('/');
     }
   }, [navigate]);
+
 
   useEffect(() => {
     const storedLikedPosts = localStorage.getItem('likedPosts');
@@ -64,24 +65,15 @@ const PostFeed = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-
-      // Log the response to verify its structure
-      console.log('API Response:', response.data);
-
-      // Check if 'results' is an array
-      if (response.data && Array.isArray(response.data.results)) {
-        setPosts((prevPosts) => {
-          const newPosts = response.data.results;
-          const combinedPosts = [...prevPosts, ...newPosts];
-          const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
-          return uniquePosts;
-        });
-        setTotalPages(Math.ceil(response.data.count / 10));
-        if (page >= Math.ceil(response.data.count / 10)) {
-          setHasMore(false);
-        }
-      } else {
-        setError('Invalid data format: results is not an array');
+      setPosts((prevPosts) => {
+        const newPosts = response.data.results;
+        const combinedPosts = [...prevPosts, ...newPosts];
+        const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
+        return uniquePosts;
+      });
+      setTotalPages(Math.ceil(response.data.count / 10));
+      if (page >= Math.ceil(response.data.count / 10)) {
+        setHasMore(false);
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -90,7 +82,7 @@ const PostFeed = () => {
       setLoading(false);
     }
   }, []);
-
+  
   useEffect(() => {
     fetchPostsCallback(currentPage);
   }, [currentPage, fetchPostsCallback]);
@@ -229,9 +221,9 @@ const PostFeed = () => {
                 </div>
               );
             })}
+
             {loading && <SkeletonLoader />}
-            {error && <div className="text-red-500">{error}</div>}
-            {!hasMore && <div className="text-gray-500 text-center">No more posts available.</div>}
+            {error && <p className="text-red-500">{error}</p>}
           </div>
         </div>
       </div>
