@@ -19,7 +19,7 @@ const HashtagPage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState([]);
-  const BASE_URL = 'http://3.92.22.96/';
+  const BASE_URL = 'https://talkstream.xyz/';
   const dispatch = useDispatch();
 
   const loggedInUser = useSelector((state) => state.auth.user); 
