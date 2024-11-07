@@ -81,7 +81,7 @@ const handleCallRejected = () => {
   const fetchUserDetails = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://3.92.22.96/posts/users/${userId}/`, {
+      const response = await axios.get(`https://talkstream.xyz/posts/users/${userId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +100,7 @@ const handleCallRejected = () => {
   const fetchMessages = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://3.92.22.96/posts/messages/${userId}/`, {
+      const response = await axios.get(`https://talkstream.xyz/posts/messages/${userId}/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Fetched Messages:", response.data); // Debugging log
@@ -198,6 +198,7 @@ const handleCallRejected = () => {
     setEditVideo(null);
     setImagePreviewEdit(null);
     setVideoPreviewEdit(null);
+    
   };
   
 
@@ -235,7 +236,7 @@ const handleCallRejected = () => {
   const establishWebSocketConnection = () => {
     const token = localStorage.getItem('token');
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const ws = new WebSocket(`${wsProtocol}://3.92.22.96/chat/${userId}/?token=${token}`);
+    const ws = new WebSocket(`${wsProtocol}://https://talkstream.xyz//chat/${userId}/?token=${token}`);
   
     setSocket(ws);
   
