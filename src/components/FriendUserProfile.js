@@ -38,7 +38,7 @@ const FriendUserProfile = () => {
     }
   }, [likedPosts, dispatch, userId]);
 
-  const BASE_URL = 'http://3.92.22.96/';
+  const BASE_URL = 'https://talkstream.xyz/';
   const postdetails = useSelector((state) => state.posts.postdetails);
   const profile = useSelector((state) => state.posts.profile);
 
