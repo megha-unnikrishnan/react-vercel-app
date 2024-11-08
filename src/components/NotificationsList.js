@@ -96,7 +96,7 @@ const NotificationPopover = () => {
   const handleNotificationClick = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch('https://react-vercel-app-gules.vercel.app/api/notifications/mark-all-read/', {}, { // Updated to use the new base URL
+      await axios.patch('https://talkstream.xyz/api/notifications/mark-all-read/', {}, { // Updated to use the new base URL
         headers: {
           'Authorization': `Bearer ${token}`,
         },
