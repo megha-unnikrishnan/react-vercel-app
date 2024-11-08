@@ -60,37 +60,42 @@ const PostFeed = () => {
     dispatch(fetchUserDetails());
   }, [dispatch]);
 
-  const fetchPostsCallback = useCallback(async (page) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        navigate('/'); // Redirect if token is missing
-        return;
-      }
-      
-      const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setPosts((prevPosts) => {
-        const newPosts = response.data.results;
-        const combinedPosts = [...prevPosts, ...newPosts];
-        const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
-        return uniquePosts;
-      });
-
-      setHasMore(page < Math.ceil(response.data.count / 10));
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        navigate('/'); // Unauthorized error - redirect to login
-      } else {
-        setError('Error fetching posts');
-      }
-    } finally {
-      setLoading(false);
+ const fetchPostsCallback = useCallback(async (page) => {
+  setLoading(true);
+  try {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      navigate('/'); // Redirect if token is missing
+      return;
     }
-  }, [navigate]);
+    
+    const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // Log the response data to inspect its structure
+    console.log(response.data);
+
+    // Check if response.data.results is defined and is an array before using it
+    const newPosts = Array.isArray(response.data.results) ? response.data.results : [];
+    setPosts((prevPosts) => {
+      const combinedPosts = [...prevPosts, ...newPosts];
+      const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
+      return uniquePosts;
+    });
+
+    setHasMore(page < Math.ceil(response.data.count / 10));
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/'); // Unauthorized error - redirect to login
+    } else {
+      setError('Error fetching posts');
+    }
+  } finally {
+    setLoading(false);
+  }
+}, [navigate]);
+
 
   useEffect(() => {
     fetchPostsCallback(currentPage);
