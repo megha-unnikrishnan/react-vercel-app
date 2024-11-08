@@ -26,7 +26,7 @@ const NotificationPopover = () => {
   console.log('fetch',fetchNotifications);
   
   // Update base URL to the new one
-  const baseUrl = "https://react-vercel-app-gules.vercel.app"; 
+  const baseUrl = "https://talkstream.xyz/"; 
 
   // Update local notifications whenever the notifications state changes
   useEffect(() => {
