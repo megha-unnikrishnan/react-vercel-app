@@ -61,38 +61,42 @@ const PostFeed = () => {
   }, [dispatch]);
 
   const fetchPostsCallback = useCallback(async (page) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setPosts((prevPosts) => {
-        const newPosts = response.data.results;
-        const combinedPosts = [...prevPosts, ...newPosts];
-        const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
-        return uniquePosts;
-      });
-      setTotalPages(Math.ceil(response.data.count / 10));
-      if (page >= Math.ceil(response.data.count / 10)) {
-        setHasMore(false);
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // Unauthorized error - redirect to login
-        navigate('/');
-      } else {
-        console.error('Error fetching posts:', error);
-        setError('Error fetching posts');
-      }
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/'); // Redirect if token is missing
+      return;
     }
-  }, [navigate]);
+    
+    const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
+    setPosts((prevPosts) => {
+      const newPosts = response.data.results;
+      const combinedPosts = [...prevPosts, ...newPosts];
+      const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
+      return uniquePosts;
+    });
+    setTotalPages(Math.ceil(response.data.count / 10));
+    if (page >= Math.ceil(response.data.count / 10)) {
+      setHasMore(false);
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      // Unauthorized error - redirect to login
+      navigate('/');
+    } else {
+      console.error('Error fetching posts:', error);
+      setError('Error fetching posts');
+    }
+  } finally {
+    setLoading(false);
+  }
+}, [navigate]);
   useEffect(() => {
     fetchPostsCallback(currentPage);
   }, [currentPage, fetchPostsCallback]);
