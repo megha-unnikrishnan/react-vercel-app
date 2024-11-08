@@ -76,7 +76,7 @@ const NotificationPopover = () => {
   const handleNotificationClick = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`${baseUrl}/api/notifications/mark-all-read/`, {}, {
+      await axios.patch('https://talkstream.xyz/api/notifications/mark-all-read/', {}, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
