@@ -47,7 +47,6 @@ const PostFeed = () => {
     const token = localStorage.getItem('token');
     
     if (!token) {
-      // Handle missing token (perhaps log the user out or prompt for login)
       setError('No authorization token found');
       setLoading(false);
       return;
@@ -57,15 +56,19 @@ const PostFeed = () => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    // Calculate total pages once to avoid repetition
-    const totalPages = Math.ceil(response.data.count / 10);
+    console.log(response.data); // Inspect the response
 
-    setPosts((prevPosts) => [...prevPosts, ...response.data.results]);
-    setTotalPages(totalPages);
+    // Validate if 'results' is an array before attempting to iterate
+    if (response.data && Array.isArray(response.data.results)) {
+      setPosts((prevPosts) => [...prevPosts, ...response.data.results]);
+      setTotalPages(Math.ceil(response.data.count / 10));
 
-    // Check if we have reached the last page
-    if (page >= totalPages) {
-      setHasMore(false);
+      if (page >= Math.ceil(response.data.count / 10)) {
+        setHasMore(false);
+      }
+    } else {
+      console.error('Error: results is not an array or is missing');
+      setError('Invalid data received');
     }
 
   } catch (error) {
@@ -75,6 +78,7 @@ const PostFeed = () => {
     setLoading(false);
   }
 }, [setLoading, setPosts, setTotalPages, setHasMore, setError]);
+
 
 
   useEffect(() => {
