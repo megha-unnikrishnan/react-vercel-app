@@ -36,7 +36,7 @@ const NotificationPopover = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const wsUrl = `wss://talkstream.xyz/ws/notifications/?token=${token}`; // Updated WebSocket URL
+    const wsUrl = `ws://talkstream.xyz/ws/notifications/?token=${token}`; // Updated WebSocket URL
 
     ws.current = new WebSocket(wsUrl);
 
