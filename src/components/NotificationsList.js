@@ -42,7 +42,7 @@ const NotificationPopover = () => {
   // Setup WebSocket connection for real-time notifications
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const wsUrl = `wss://react-vercel-app-gules.vercel.app/ws/notifications/?token=${token}`; // Updated to use wss (secure WebSocket)
+    const wsUrl = `wss://talkstream.xyz/ws/notifications/?token=${token}`; // Updated to use wss (secure WebSocket)
   
     ws.current = new WebSocket(wsUrl);
   
