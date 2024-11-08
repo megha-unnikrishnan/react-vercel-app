@@ -58,30 +58,33 @@ useEffect(() => {
   }, [dispatch]);
 
   const fetchPostsCallback = useCallback(async (page) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setPosts((prevPosts) => {
-        const newPosts = response.data.results;
-        const combinedPosts = [...prevPosts, ...newPosts];
-        const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
-        return uniquePosts;
-      });
-      setTotalPages(Math.ceil(response.data.count / 10));
-      if (page >= Math.ceil(response.data.count / 10)) {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      setError('Error fetching posts');
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    const newPosts = response.data.results || []; // handle missing results
+    if (!Array.isArray(newPosts)) throw new Error('Unexpected response format'); // safeguard
+   
+    setPosts((prevPosts) => {
+      const combinedPosts = [...prevPosts, ...newPosts];
+      const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
+      return uniquePosts;
+    });
+    setTotalPages(Math.ceil(response.data.count / 10));
+    if (page >= Math.ceil(response.data.count / 10)) {
+      setHasMore(false);
     }
-  }, []);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    setError('Error fetching posts');
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
   
   useEffect(() => {
     fetchPostsCallback(currentPage);
