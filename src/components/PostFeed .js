@@ -42,24 +42,40 @@ const PostFeed = () => {
   }, [dispatch]);
 
   const fetchPostsCallback = useCallback(async (page) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
-         headers: { Authorization: `Bearer ${token}` },
-      });
-      setPosts((prevPosts) => [...prevPosts, ...response.data.results]);
-      setTotalPages(Math.ceil(response.data.count / 10));
-      if (page >= Math.ceil(response.data.count / 10)) {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      setError('Error fetching posts');
-    } finally {
+  setLoading(true);
+  try {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      // Handle missing token (perhaps log the user out or prompt for login)
+      setError('No authorization token found');
       setLoading(false);
+      return;
     }
-  }, []);
+
+    const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // Calculate total pages once to avoid repetition
+    const totalPages = Math.ceil(response.data.count / 10);
+
+    setPosts((prevPosts) => [...prevPosts, ...response.data.results]);
+    setTotalPages(totalPages);
+
+    // Check if we have reached the last page
+    if (page >= totalPages) {
+      setHasMore(false);
+    }
+
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    setError('Error fetching posts');
+  } finally {
+    setLoading(false);
+  }
+}, [setLoading, setPosts, setTotalPages, setHasMore, setError]);
+
 
   useEffect(() => {
     fetchPostsCallback(currentPage);
