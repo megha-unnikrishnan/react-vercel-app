@@ -67,6 +67,7 @@ useEffect(() => {
             'Content-Type': 'application/json',
         },
       });
+       console.log('data',response.data); 
       setPosts((prevPosts) => {
         const newPosts = response.data.results;
         const combinedPosts = [...prevPosts, ...newPosts];
