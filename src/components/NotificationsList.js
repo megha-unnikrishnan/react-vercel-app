@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';  
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNotifications } from '../features/notificationSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,99 +15,76 @@ const NotificationPopover = () => {
   const [localNotifications, setLocalNotifications] = useState([]);
   const popoverRef = useRef(null);
   const ws = useRef(null);
-  const navigate = useNavigate(); // Use useNavigate for navigation
-  console.log('local',localNotifications);
-  
-  // Fetch notifications on component mount
+  const navigate = useNavigate();
+
+  // Updated base URL
+  const baseUrl = "https://talkstream.xyz"; 
+
   useEffect(() => {
     dispatch(fetchNotifications());
   }, [dispatch]);
 
-  console.log('fetch',fetchNotifications);
-  
-  // Update base URL to the new one
-  const baseUrl = "https://talkstream.xyz/"; 
-
-  // Update local notifications whenever the notifications state changes
   useEffect(() => {
     if (notifications) {
       const updatedNotifications = notifications.map(notification => ({
         ...notification,
-        profilePictureUrl: new URL(notification.sender.profile_picture, baseUrl).toString() // Ensure URL is correct
+        profilePictureUrl: new URL(notification.sender.profile_picture, baseUrl).toString()
       }));
       setLocalNotifications(updatedNotifications);
     }
   }, [notifications]);
 
-  // Setup WebSocket connection for real-time notifications
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const wsUrl = `wss://talkstream.xyz/ws/notifications/?token=${token}`; // Updated to use wss (secure WebSocket)
-  
+    const wsUrl = `wss://talkstream.xyz/ws/notifications/?token=${token}`; // Updated WebSocket URL
+
     ws.current = new WebSocket(wsUrl);
-  
+
     ws.current.onopen = () => {
       console.log('WebSocket connection established');
     };
-  
+
     ws.current.onmessage = (event) => {
       const newNotification = JSON.parse(event.data);
-      console.log('Received Notification:', newNotification);
       const profilePictureUrl = newNotification.sender.profile_picture 
         ? new URL(newNotification.sender.profile_picture, baseUrl).toString() 
         : null;
-    
+      
       const updatedNotification = {
         ...newNotification,
-        
         profilePictureUrl,
       };
-    
-      console.log('Profile Picture URL:', profilePictureUrl);
-    
-      // Add the new notification to the local state
-      setLocalNotifications((prevNotifications) => {
-        console.log('Previous Notifications:', prevNotifications);
-        const updatedNotifications = [updatedNotification, ...prevNotifications];
-        console.log('Updated Notifications:', updatedNotifications);
-    
-        return updatedNotifications; // This should trigger a re-render
-      });
+
+      setLocalNotifications((prevNotifications) => [updatedNotification, ...prevNotifications]);
     };
-  
+
     ws.current.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
-  
+
     ws.current.onclose = () => {
       console.log('WebSocket connection closed');
     };
-  
-    // Cleanup on component unmount
+
     return () => {
       if (ws.current) {
         ws.current.close();
       }
     };
   }, []);
-  
 
-  // Handle marking all notifications as read
   const handleNotificationClick = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch('https://talkstream.xyz/api/notifications/mark-all-read/', {}, { // Updated to use the new base URL
+      await axios.patch(`${baseUrl}/api/notifications/mark-all-read/`, {}, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
-      // Update all notifications in the local state to read
       setLocalNotifications((prev) =>
         prev.map((notif) => ({ ...notif, is_read: true }))
       );
-
-      // Set unread count to zero
       updateUnreadCount(0);
     } catch (error) {
       console.error('Failed to mark all notifications as read:', error);
@@ -120,13 +97,11 @@ const NotificationPopover = () => {
 
   const togglePopover = () => {
     setIsOpen(!isOpen);
-    // Mark all notifications as read when opening the popover
     if (!isOpen) {
       handleNotificationClick();
     }
   };
 
-  // Close popover if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popoverRef.current && !popoverRef.current.contains(event.target)) {
@@ -156,15 +131,12 @@ const NotificationPopover = () => {
         <div className="absolute left-0 mt-4 w-96 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4 max-h-[500px] overflow-y-auto scrollbar-hide" style={{ left: '-360px' }}>
           <style>
             {`
-              /* Hide scrollbar for WebKit browsers */
               .scrollbar-hide::-webkit-scrollbar {
                 display: none;
               }
-
-              /* Hide scrollbar for IE and Edge */
               .scrollbar-hide {
-                -ms-overflow-style: none;  /* Internet Explorer and Edge */
-                scrollbar-width: none;  /* Firefox */
+                -ms-overflow-style: none;
+                scrollbar-width: none;
               }
             `}
           </style>
@@ -173,7 +145,6 @@ const NotificationPopover = () => {
 
           {status === 'loading' && <div className="text-center py-4">Loading...</div>}
           {status === 'failed' && <div className="text-center py-4 text-red-500">Error: {error}</div>}
-          {console.log('Notifications:', localNotifications)}
           {localNotifications.length === 0 ? (
             <div className="p-4 text-gray-600">No notifications yet.</div>
           ) : (
@@ -191,7 +162,6 @@ const NotificationPopover = () => {
                         alt="Profile"
                         className="w-8 h-8 rounded-full mr-2"
                       />
-                      {console.log('image',notification.profilePictureUrl)}
                       <div className="text-sm">
                         <p>{notification.message}</p>
                       </div>
