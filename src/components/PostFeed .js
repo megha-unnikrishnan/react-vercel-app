@@ -13,6 +13,7 @@ import MessageIcon from './MessageIcon';
 import SkeletonLoader from './SkeletonLoader'; 
 import FlagPost from './FlagPost';
 import { useNavigate } from 'react-router-dom';
+
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
@@ -22,16 +23,16 @@ const PostFeed = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const loggedInUser = useSelector((state) => state.auth.user); 
   const username = loggedInUser ? loggedInUser.first_name : null;
   const errors = useSelector((state) => state.auth.error);
 
-useEffect(() => {
-  if (errors === 'Your account has been blocked by the admin.') {
-    alert(errors); // or display a message in the UI
-  }
-}, [error]);
+  useEffect(() => {
+    if (errors === 'Your account has been blocked by the admin.') {
+      alert(errors);
+    }
+  }, [error]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -39,7 +40,6 @@ useEffect(() => {
       navigate('/');
     }
   }, [navigate]);
-
 
   useEffect(() => {
     const storedLikedPosts = localStorage.getItem('likedPosts');
@@ -64,12 +64,22 @@ useEffect(() => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
+      
+      console.log('API Response:', response.data); // Log the response for debugging
+
+      // Use a fallback if results key is missing
+      const newPosts = response.data.results || response.data;
+
+      if (!Array.isArray(newPosts)) {
+        throw new Error('Invalid data format'); // Handle non-iterable response
+      }
+
       setPosts((prevPosts) => {
-        const newPosts = response.data.results;
         const combinedPosts = [...prevPosts, ...newPosts];
         const uniquePosts = Array.from(new Map(combinedPosts.map(post => [post.id, post])).values());
         return uniquePosts;
       });
+      
       setTotalPages(Math.ceil(response.data.count / 10));
       if (page >= Math.ceil(response.data.count / 10)) {
         setHasMore(false);
@@ -81,22 +91,19 @@ useEffect(() => {
       setLoading(false);
     }
   }, []);
-  
+
   useEffect(() => {
     fetchPostsCallback(currentPage);
   }, [currentPage, fetchPostsCallback]);
 
   const handleLikeToggle = (post) => {
     const isLiked = likedPosts.includes(post.id);
-  
     const newLikedPosts = isLiked 
-      ? likedPosts.filter(id => id !== post.id) // Unlike
-      : [...likedPosts, post.id]; // Like
+      ? likedPosts.filter(id => id !== post.id) 
+      : [...likedPosts, post.id]; 
 
-    // Update likedPosts state immediately
     setLikedPosts(newLikedPosts);
-    
-    // Update post's like count immediately
+
     const updatedPosts = posts.map(p => {
       if (p.id === post.id) {
         return {
@@ -108,10 +115,8 @@ useEffect(() => {
     });
     setPosts(updatedPosts);
 
-    // Dispatch the appropriate action
     const action = isLiked ? unlikePost(post.id) : likePost(post.id);
     dispatch(action).then(() => {
-      // Optionally refresh posts after liking/unliking
       dispatch(fetchPosts());
     });
   };
