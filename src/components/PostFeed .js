@@ -62,6 +62,7 @@ const PostFeed = () => {
       const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
         },
       });
       
