@@ -44,10 +44,9 @@ const PostFeed = () => {
   const fetchPostsCallback = useCallback(async (page) => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
+         headers: { Authorization: `Bearer ${token}` },
       });
       setPosts((prevPosts) => [...prevPosts, ...response.data.results]);
       setTotalPages(Math.ceil(response.data.count / 10));
