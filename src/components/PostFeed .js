@@ -64,10 +64,8 @@ useEffect(() => {
       const response = await axios.get(`https://talkstream.xyz/posts/fetch-all-posts/?page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json',
         },
       });
-       console.log('data',response.data); 
       setPosts((prevPosts) => {
         const newPosts = response.data.results;
         const combinedPosts = [...prevPosts, ...newPosts];
