@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import SideBar from './SideBar';
 import { FaRegThumbsUp } from 'react-icons/fa';
@@ -8,12 +7,12 @@ import { likePost, unlikePost, fetchPosts } from '../features/postSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import NotificationsList from './NotificationsList';
 import BookmarkButton from './BookmarkButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchUserDetails } from '../features/authSlice';
 import MessageIcon from './MessageIcon';
-import SkeletonLoader from './SkeletonLoader'; 
+import SkeletonLoader from './SkeletonLoader';
 import FlagPost from './FlagPost';
-import { useNavigate } from 'react-router-dom';
+
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
@@ -22,18 +21,20 @@ const PostFeed = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
   const dispatch = useDispatch();
-  const navigate=useNavigate()
-  const loggedInUser = useSelector((state) => state.auth.user); 
+  const navigate = useNavigate();
+  const loggedInUser = useSelector((state) => state.auth.user);
   const username = loggedInUser ? loggedInUser.first_name : null;
   const errors = useSelector((state) => state.auth.error);
 
-useEffect(() => {
-  if (errors === 'Your account has been blocked by the admin.') {
-    alert(errors); // or display a message in the UI
-  }
-}, [error]);
+  useEffect(() => {
+    if (errors === 'Your account has been blocked by the admin.') {
+      alert(errors);
+    }
+  }, [errors]);
 
+  // Redirect if token is missing
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -41,7 +42,7 @@ useEffect(() => {
     }
   }, [navigate]);
 
-
+  // Retrieve liked posts from local storage
   useEffect(() => {
     const storedLikedPosts = localStorage.getItem('likedPosts');
     if (storedLikedPosts) {
@@ -49,10 +50,12 @@ useEffect(() => {
     }
   }, []);
 
+  // Save liked posts to local storage
   useEffect(() => {
     localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
   }, [likedPosts]);
 
+  // Fetch user details
   useEffect(() => {
     dispatch(fetchUserDetails());
   }, [dispatch]);
@@ -60,11 +63,13 @@ useEffect(() => {
   const fetchPostsCallback = useCallback(async (page) => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.get(`https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/?page=${page}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+
       setPosts((prevPosts) => {
         const newPosts = response.data.results;
         const combinedPosts = [...prevPosts, ...newPosts];
@@ -76,28 +81,30 @@ useEffect(() => {
         setHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetching posts:', error);
-      setError('Error fetching posts');
+      if (error.response && error.response.status === 401) {
+        // Unauthorized error - redirect to login
+        navigate('/');
+      } else {
+        console.error('Error fetching posts:', error);
+        setError('Error fetching posts');
+      }
     } finally {
       setLoading(false);
     }
-  }, []);
-  
+  }, [navigate]);
+
   useEffect(() => {
     fetchPostsCallback(currentPage);
   }, [currentPage, fetchPostsCallback]);
 
   const handleLikeToggle = (post) => {
     const isLiked = likedPosts.includes(post.id);
-  
     const newLikedPosts = isLiked 
-      ? likedPosts.filter(id => id !== post.id) // Unlike
-      : [...likedPosts, post.id]; // Like
+      ? likedPosts.filter(id => id !== post.id)
+      : [...likedPosts, post.id];
 
-    // Update likedPosts state immediately
     setLikedPosts(newLikedPosts);
-    
-    // Update post's like count immediately
+
     const updatedPosts = posts.map(p => {
       if (p.id === post.id) {
         return {
@@ -109,10 +116,8 @@ useEffect(() => {
     });
     setPosts(updatedPosts);
 
-    // Dispatch the appropriate action
     const action = isLiked ? unlikePost(post.id) : likePost(post.id);
     dispatch(action).then(() => {
-      // Optionally refresh posts after liking/unliking
       dispatch(fetchPosts());
     });
   };
@@ -209,21 +214,20 @@ useEffect(() => {
                             <button type="button" onClick={() => handleLikeToggle(post)} className="flex items-center">
                               <FaRegThumbsUp className={`h-5 w-5 ${likedPosts.includes(post.id) ? 'text-blue-500' : 'text-gray-500'} hover:text-blue-700 transition duration-200`} />
                             </button>
-                            <span className="text-gray-600">{post.total_likes}</span>
+                            <span className="text-gray-700">{post.total_likes}</span>
                           </div>
+                          <CommentList postId={post.id} />
                           <BookmarkButton postId={post.id} />
                           <FlagPost postId={post.id} />
                         </div>
                       </div>
                     </div>
                   </div>
-                  <CommentList postId={post.id} />
                 </div>
               );
             })}
-
             {loading && <SkeletonLoader />}
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <div className="text-center text-red-500">{error}</div>}
           </div>
         </div>
       </div>
