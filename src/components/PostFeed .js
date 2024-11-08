@@ -267,8 +267,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -277,7 +275,7 @@ const PostFeed = () => {
   const [nextPage, setNextPage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const API_URL = https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/';
+  const API_URL = 'https://react-vercel-app-gules.vercel.app/posts/fetch-all-posts/';
 
   useEffect(() => {
     fetchPosts(API_URL);
@@ -361,4 +359,3 @@ const PostFeed = () => {
 };
 
 export default PostFeed;
-
