@@ -15,7 +15,7 @@ import FlagPost from './FlagPost';
 import { useNavigate } from 'react-router-dom';
 
 const PostFeed = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);  // Initialize posts as an empty array
   const [error, setError] = useState(null);
   const [likedPosts, setLikedPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,12 +25,14 @@ const PostFeed = () => {
   const username = loggedInUser ? loggedInUser.first_name : null;
   const errors = useSelector((state) => state.auth.error);
 
+  // Show error message if account is blocked
   useEffect(() => {
     if (errors === 'Your account has been blocked by the admin.') {
       alert(errors); // or display a message in the UI
     }
   }, [errors]);
 
+  // Redirect if no token found
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -38,6 +40,7 @@ const PostFeed = () => {
     }
   }, [navigate]);
 
+  // Retrieve liked posts from localStorage
   useEffect(() => {
     const storedLikedPosts = localStorage.getItem('likedPosts');
     if (storedLikedPosts) {
@@ -45,14 +48,17 @@ const PostFeed = () => {
     }
   }, []);
 
+  // Save liked posts to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
   }, [likedPosts]);
 
+  // Fetch user details on mount
   useEffect(() => {
     dispatch(fetchUserDetails());
   }, [dispatch]);
 
+  // Fetch all posts
   const fetchPostsCallback = async () => {
     setLoading(true);
     try {
@@ -61,7 +67,7 @@ const PostFeed = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      const newPosts = response.data.results;
+      const newPosts = response.data.results || []; // Ensure results is an array
       setPosts(newPosts); // Set all fetched posts directly
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -71,10 +77,12 @@ const PostFeed = () => {
     }
   };
 
+  // Fetch posts on component mount
   useEffect(() => {
     fetchPostsCallback();
   }, []);
 
+  // Handle like toggle
   const handleLikeToggle = (post) => {
     const isLiked = likedPosts.includes(post.id);
     const newLikedPosts = isLiked
@@ -104,6 +112,7 @@ const PostFeed = () => {
     });
   };
 
+  // Render content with hashtags as links
   const renderContentWithHashtags = (content) => {
     const hashtagRegex = /#(\w+)/g;
     const parts = content.split(hashtagRegex);
@@ -137,7 +146,8 @@ const PostFeed = () => {
 
         <div className="flex-1 p-4 overflow-auto bg-gray-50">
           <div className="space-y-4">
-            {posts.map((post) => (
+            {/* Check if posts is an array before calling map */}
+            {Array.isArray(posts) && posts.map((post) => (
               <div
                 key={post.id}
                 className="bg-white border border-gray-300 shadow-lg rounded-lg p-4 mx-auto transition-transform duration-300 hover:shadow-2xl hover:border-blue-500"
