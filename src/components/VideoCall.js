@@ -32,9 +32,9 @@ const togglePopup = () => setPopupVisible(!isPopupVisible);
         const token = localStorage.getItem('token');
         
 
-        const wsUrl = `wss://talkstream.xyz/ws/video-call/${currentUser.id}/${userId}/?token=${token}`);
+        ws.current = new WebSocket(`${wsProtocol}://talkstream.xyz/ws/video-call/${currentUser.id}/${userId}/?token=${token}`);
 
-        ws.current = new WebSocket(wsUrl);
+        
         ws.current.onopen = () => {
             console.log("WebSocket connection established.");
             setIsWsConnected(true);
