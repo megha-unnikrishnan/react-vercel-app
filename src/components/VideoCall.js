@@ -30,7 +30,7 @@ const togglePopup = () => setPopupVisible(!isPopupVisible);
     useEffect(() => {
         const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
         const token = localStorage.getItem('token');
-        ws.current = new WebSocket(`wss://talkstream.xyz/ws/video-call/${currentUser.id}/${userId}/?token=${token}`);
+        ws.current =  new WebSocket(`${wsProtocol}://talkstream.xyz/ws/video-call/${currentUser.id}/${userId}/?token=${token}`);
 
 
         ws.current.onopen = () => {
