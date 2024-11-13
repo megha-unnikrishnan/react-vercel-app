@@ -237,7 +237,7 @@ const handleCallRejected = () => {
     const token = localStorage.getItem('token');
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     
-    const ws = new WebSocket(`${wsProtocol}://talkstream.xyz/chat/${userId}/?token=${token}`);
+    const ws = new WebSocket(`${wsProtocol}://talkstream.xyz/ws/chat/${userId}/?token=${token}`);
  
     setSocket(ws);
   
