@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -19,7 +20,7 @@ const HashtagPage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState([]);
-  const BASE_URL = 'https://talkstream.xyz/';
+  const BASE_URL = 'https://talkstream.xyz';
   const dispatch = useDispatch();
 
   const loggedInUser = useSelector((state) => state.auth.user); 
