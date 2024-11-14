@@ -4,6 +4,7 @@ import { requestPasswordReset, clearMessages } from '../features/authSlice'; // 
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');  // State for email validation error
   const dispatch = useDispatch();
   const { loading, message, error } = useSelector((state) => state.auth);
 
@@ -12,9 +13,30 @@ const ForgotPassword = () => {
     dispatch(clearMessages()); // Clear any existing messages when the component mounts
   }, [dispatch]);
 
+  // Email validation function
+  const validateEmail = (email) => {
+    if (!email) {
+      return 'Email is required.';  // Check if email is empty
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address.';
+    }
+    return '';  // No error
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(requestPasswordReset(email));
+
+    // Validate email before submitting
+    const emailValidationError = validateEmail(email);
+    if (emailValidationError) {
+      setEmailError(emailValidationError);
+      return;
+    }
+
+    setEmailError('');  // Clear error if valid
+    dispatch(requestPasswordReset(email));  // Dispatch action to request password reset
   };
 
   return (
@@ -29,14 +51,14 @@ const ForgotPassword = () => {
               id="email"
               name="email"
               value={email}
-              placeholder='Enter you email'
+              placeholder="Enter your email"
               onChange={(e) => setEmail(e.target.value)}
-              required
               className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
+            {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>} {/* Show error if validation fails */}
           </div>
           {loading && <p className="text-blue-500 text-center">Sending reset link...</p>}
-          {message && <p className="text-green-500 text-center">{message}Please check your email to reset your password.</p>}
+          {message && <p className="text-green-500 text-center">{message} Please check your email to reset your password.</p>}
           {error && <p className="text-red-500 text-center">{error}</p>}
           <button
             type="submit"
