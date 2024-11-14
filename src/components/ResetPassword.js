@@ -9,6 +9,7 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
   const [passwordMismatch, setPasswordMismatch] = useState(false); // State to manage password mismatch
+  const [passwordError, setPasswordError] = useState(''); // State to manage password error messages
   const [countdown, setCountdown] = useState(5); // Countdown timer state
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Hook for navigation
@@ -26,6 +27,14 @@ const ResetPassword = () => {
     return () => clearInterval(timer); // Cleanup interval on component unmount
   }, [showPopup, countdown, navigate]);
 
+  const validatePassword = (password) => {
+    // Password validation regex for at least one lowercase, one uppercase, one special character, and 8+ characters
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!password) return 'Password is required.';
+    if (!passwordRegex.test(password)) return 'Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, and a special character.';
+    return ''; // No error
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -35,6 +44,14 @@ const ResetPassword = () => {
     }
 
     setPasswordMismatch(false);
+
+    const passwordValidationError = validatePassword(password);
+    if (passwordValidationError) {
+      setPasswordError(passwordValidationError);
+      return;
+    }
+
+    setPasswordError(''); // Clear error if password is valid
 
     dispatch(confirmPasswordReset({ token, password }))
       .then((response) => {
@@ -63,9 +80,9 @@ const ResetPassword = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              
               className="mt-1 p-3 border border-gray-300 rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
           </div>
           <div>
             <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
@@ -75,7 +92,6 @@ const ResetPassword = () => {
               name="confirm-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              
               className="mt-1 p-3 border border-gray-300 rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {passwordMismatch && <p className="text-red-500 text-sm mt-1">Passwords do not match</p>}
@@ -96,8 +112,6 @@ const ResetPassword = () => {
             <div className="bg-white p-6 rounded-lg shadow-lg text-center">
               <p className="text-lg font-semibold mb-4 text-green-600">Password reset successfully!</p>
               <p className="mb-4 text-gray-700">You will be redirected to the login page in {countdown} seconds.</p>
-              {/* Optional: Add a manual link to the login page */}
-              {/* <a href="/login" className="text-blue-500 underline">Go to Login Page</a> */}
             </div>
           </div>
         )}
