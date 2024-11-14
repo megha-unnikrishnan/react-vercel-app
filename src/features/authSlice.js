@@ -87,6 +87,8 @@ export const requestPasswordReset = createAsyncThunk(
   }
 );
 
+
+
 export const confirmPasswordReset = createAsyncThunk(
   'auth/confirmPasswordReset',
   async ({ token, password }, { rejectWithValue }) => {
@@ -96,13 +98,14 @@ export const confirmPasswordReset = createAsyncThunk(
         password
       });
       return response.data;
-   } catch (err) {
-  console.error('Reset Password Error:', err);
-  const errorMessage = err.response?.data || { detail: 'An unknown error occurred.' };
-  return rejectWithValue(errorMessage);
-}
+    } catch (err) {
+      const errorMessage = err.response?.data || { detail: 'An unknown error occurred.' };
+      return rejectWithValue(errorMessage);
+    }
   }
 );
+
+
 
 
 
