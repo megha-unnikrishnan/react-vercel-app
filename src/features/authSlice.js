@@ -78,7 +78,7 @@ export const requestPasswordReset = createAsyncThunk(
   'auth/requestPasswordReset',
   async (email, { rejectWithValue }) => {
     try {
-      const response = await axios.post('https://talkstream.xyz/api/reset-password-request/', { email });
+      const response = await axios.post('https://talkstream.xyz/api/reset-password/', { email });
       return response.data;
     } catch (err) {
       const errorMessage = err.response?.data || { detail: 'An unknown error occurred.' };
