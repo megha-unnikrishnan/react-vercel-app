@@ -261,7 +261,7 @@ const togglePopup = () => setPopupVisible(!isPopupVisible);
 
         {/* Start Call Button */}
         {!isCallActive && !isCallReceived && isCaller && (
-            <div style={{marginRight:'511%',marginTop:'-103%'}}>
+            <div style={{marginRight:'430%',marginTop:'-103%'}}>
                 <button
                     onClick={startCall}
                     className="bg-blue-400 p-2 rounded-full text-white hover:bg-blue-500 shadow-lg transition-all duration-300"
