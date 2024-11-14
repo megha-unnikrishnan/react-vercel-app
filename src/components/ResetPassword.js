@@ -10,6 +10,7 @@ const ResetPassword = () => {
   const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
   const [passwordMismatch, setPasswordMismatch] = useState(false); // State to manage password mismatch
   const [passwordError, setPasswordError] = useState(''); // State to manage password error messages
+  const [confirmPasswordError, setConfirmPasswordError] = useState(''); // State to manage confirm password error
   const [countdown, setCountdown] = useState(5); // Countdown timer state
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Hook for navigation
@@ -35,23 +36,30 @@ const ResetPassword = () => {
     return ''; // No error
   };
 
+  const validateConfirmPassword = (confirmPassword) => {
+    if (!confirmPassword) return 'Confirm password is required.';
+    if (confirmPassword !== password) return 'Passwords do not match.';
+    return ''; // No error
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setPasswordMismatch(true);
-      return;
-    }
-
-    setPasswordMismatch(false);
-
     const passwordValidationError = validatePassword(password);
+    const confirmPasswordValidationError = validateConfirmPassword(confirmPassword);
+
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
       return;
     }
 
-    setPasswordError(''); // Clear error if password is valid
+    if (confirmPasswordValidationError) {
+      setConfirmPasswordError(confirmPasswordValidationError);
+      return;
+    }
+
+    setPasswordError(''); // Clear password error if valid
+    setConfirmPasswordError(''); // Clear confirm password error if valid
 
     dispatch(confirmPasswordReset({ token, password }))
       .then((response) => {
@@ -94,7 +102,7 @@ const ResetPassword = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="mt-1 p-3 border border-gray-300 rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {passwordMismatch && <p className="text-red-500 text-sm mt-1">Passwords do not match</p>}
+            {confirmPasswordError && <p className="text-red-500 text-sm mt-1">{confirmPasswordError}</p>}
           </div>
           {loading && <p className="text-blue-500">Resetting password...</p>}
           {message && <p className="text-green-500">{message}</p>}
