@@ -63,7 +63,7 @@ const ResetPassword = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              
               className="mt-1 p-3 border border-gray-300 rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -75,7 +75,7 @@ const ResetPassword = () => {
               name="confirm-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              required
+              
               className="mt-1 p-3 border border-gray-300 rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {passwordMismatch && <p className="text-red-500 text-sm mt-1">Passwords do not match</p>}
