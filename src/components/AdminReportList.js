@@ -136,7 +136,7 @@ const AdminReportList = () => {
     if (reports.length === 0) return <p className="text-center text-gray-500">No reports found.</p>;
 
     return (
-      <div className="overflow-x-auto mt-4" style={{paddingLeft:'16%'}}>
+      <div className="overflow-x-auto mt-4" style={{paddingLeft:'18%'}}>
        <h1 className="text-4xl font-extrabold text-gray-800 my-6 p-4 rounded-lg shadow-lg">
   Flagged Posts
 </h1>
