@@ -1,45 +1,70 @@
 
-
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { followUser, unfollowUser, fetchFollowing, setIsFollowing, fetchFollowingandfollowers } from '../features/followerSlice';
+import {
+  followUser,
+  unfollowUser,
+  fetchFollowing,
+  setIsFollowing,
+  fetchFollowingandfollowers,
+} from '../features/followerSlice';
 import { FaUser, FaUserCheck } from 'react-icons/fa';
 
 const FollowButton = ({ userId }) => {
   const dispatch = useDispatch();
-  const isFollowing = useSelector((state) => state.followers.isFollowing[userId]);
+  const currentUser = useSelector((state) => state.auth.user); // Assume current user's info is stored here
+  const isFollowing = useSelector(
+    (state) => state.followers.isFollowing[userId]
+  );
   const [loading, setLoading] = useState(true);
   const [hover, setHover] = useState(false);
 
   useEffect(() => {
-    const storedIsFollowing = localStorage.getItem(`isFollowing_${userId}`);
+    if (!currentUser) return;
+
+    // Use a unique key for each user
+    const storedIsFollowing = localStorage.getItem(
+      `${currentUser.id}_isFollowing_${userId}`
+    );
     if (storedIsFollowing !== null) {
-      dispatch(setIsFollowing({ userId, isFollowing: storedIsFollowing === 'true' }));
+      dispatch(
+        setIsFollowing({
+          userId,
+          isFollowing: storedIsFollowing === 'true',
+        })
+      );
       setLoading(false);
     } else {
       const loadFollowingStatus = async () => {
         const resultAction = await dispatch(fetchFollowing(userId));
         if (fetchFollowing.fulfilled.match(resultAction)) {
           const followingStatus = resultAction.payload.isFollowing;
-          dispatch(setIsFollowing({ userId, isFollowing: followingStatus }));
-          localStorage.setItem(`isFollowing_${userId}`, followingStatus);
+          dispatch(
+            setIsFollowing({
+              userId,
+              isFollowing: followingStatus,
+            })
+          );
+          localStorage.setItem(
+            `${currentUser.id}_isFollowing_${userId}`,
+            followingStatus
+          );
         }
         setLoading(false);
       };
       loadFollowingStatus();
     }
-  }, [dispatch, userId]);
+  }, [dispatch, userId, currentUser]);
 
   const handleClick = async () => {
     try {
       if (isFollowing) {
         dispatch(setIsFollowing({ userId, isFollowing: false }));
-        localStorage.setItem(`isFollowing_${userId}`, 'false');
+        localStorage.setItem(`${currentUser.id}_isFollowing_${userId}`, 'false');
         await dispatch(unfollowUser(userId));
       } else {
         dispatch(setIsFollowing({ userId, isFollowing: true }));
-        localStorage.setItem(`isFollowing_${userId}`, 'true');
+        localStorage.setItem(`${currentUser.id}_isFollowing_${userId}`, 'true');
         await dispatch(followUser(userId));
       }
       // Fetch updated following and followers after the action
@@ -47,8 +72,11 @@ const FollowButton = ({ userId }) => {
     } catch (error) {
       // Handle error: revert state and notify user
       dispatch(setIsFollowing({ userId, isFollowing: !isFollowing }));
-      localStorage.setItem(`isFollowing_${userId}`, String(!isFollowing));
-      alert('An error occurred while updating follow status.'); // Show an error message to the user
+      localStorage.setItem(
+        `${currentUser.id}_isFollowing_${userId}`,
+        String(!isFollowing)
+      );
+      alert('An error occurred while updating follow status.');
     }
   };
 
