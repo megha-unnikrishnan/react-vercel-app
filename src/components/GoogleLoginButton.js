@@ -60,7 +60,6 @@
 
 
 
-
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch, useSelector } from 'react-redux';
@@ -86,6 +85,9 @@ const GoogleLoginButton = () => {
 
                 // Store token in localStorage for future use
                 localStorage.setItem('token', loginResponse.token);
+
+                // Log the username to console
+                console.log('Username from loginResponse:', loginResponse.username);  // Log the username
 
                 // Store user details in the state
                 setUserDetails({
