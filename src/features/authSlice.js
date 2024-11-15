@@ -438,38 +438,26 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = payload || '';
       })
-      // Google login cases
-      // .addCase(googleLogin.pending, (state) => {
-      //   state.loading = true;
-      // })
-      // .addCase(googleLogin.fulfilled, (state, { payload }) => {
-      //   state.loading = false;
-      //   state.user = payload.username;
-      //   state.token = payload.access;
-      //   state.isAdmin = payload.isAdmin;
-      //   localStorage.setItem('token', payload.access);
-      //   localStorage.setItem('isAdmin', payload.isAdmin);
-      // })
-      // .addCase(googleLogin.rejected, (state, { payload }) => {
-      //   state.loading = false;
-      //   state.error = payload || '';
-      // })
-      .addCase(googleLogin.pending, (state) => {
-        state.status = 'loading';
+      
+       .addCase(googleLogin.pending, (state) => {
+        state.loading = true;  // Set loading state while the request is in progress
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.loading = false;  // Set loading to false once login is successful
         state.user = {
-          username: action.payload.username,
-          userId: action.payload.userId,
-          isAdmin: action.payload.isAdmin,
+          username: action.payload.username,  // Assuming the payload contains 'username'
+          userId: action.payload.userId,      // Assuming the payload contains 'userId'
+          isAdmin: action.payload.isAdmin,    // Assuming the payload contains 'isAdmin'
         };
-        state.token = action.payload.access;
-        localStorage.setItem('token', action.payload.access);
+        state.token = action.payload.access; // Store the access token
+        state.isAdmin = action.payload.isAdmin; // Store the isAdmin flag
+        localStorage.setItem('token', action.payload.access);  // Save the token in localStorage
+        localStorage.setItem('isAdmin', action.payload.isAdmin);  // Save the isAdmin flag in localStorage
+        localStorage.setItem('username', action.payload.username);  // Save the username in localStorage
       })
       .addCase(googleLogin.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
+        state.loading = false;  // Set loading to false on failure
+        state.error = action.payload || 'Google login failed';  // Store error message
       })
       // Password reset request cases
       .addCase(requestPasswordReset.pending, (state) => {
