@@ -132,32 +132,65 @@ export const confirmPasswordReset = createAsyncThunk(
 // );
 
 
+// export const googleLogin = createAsyncThunk(
+//   'auth/googleLogin',
+//   async ({ idToken }, { rejectWithValue }) => {
+//     if (!idToken) {
+//       console.error('ID token is missing'); // Log the error
+//       return rejectWithValue('ID token is missing');
+//     }
+
+//     console.log('googleLogin action dispatched with idToken:', idToken); // Log the received token
+
+//     try {
+//       const response = await axios.post('https://talkstream.xyz/api/auth/google/', { idToken });
+//       console.log('Google login successful, response data:', response.data); // Log the backend response
+      
+//       // Save token in localStorage
+//       localStorage.setItem('token', response.data.token);
+//       console.log('Token saved to localStorage:', response.data.token);
+
+//       return response.data;
+//     } catch (err) {
+//       const errorMessage = err.response?.data?.error || 'An unknown error occurred.';
+//       console.error('Error during Google login:', errorMessage, err); // Log error details
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+
 export const googleLogin = createAsyncThunk(
   'auth/googleLogin',
   async ({ idToken }, { rejectWithValue }) => {
     if (!idToken) {
-      console.error('ID token is missing'); // Log the error
+      console.error('ID token is missing');
       return rejectWithValue('ID token is missing');
     }
 
-    console.log('googleLogin action dispatched with idToken:', idToken); // Log the received token
-
     try {
       const response = await axios.post('https://talkstream.xyz/api/auth/google/', { idToken });
-      console.log('Google login successful, response data:', response.data); // Log the backend response
-      
-      // Save token in localStorage
+      // Save the user data along with the token
       localStorage.setItem('token', response.data.token);
-      console.log('Token saved to localStorage:', response.data.token);
 
-      return response.data;
+      // Include all user details from the response
+      return {
+        token: response.data.token,
+        email: response.data.email,
+        first_name: response.data.first_name,
+        profile_picture: response.data.profile_picture,
+        isAdmin: response.data.isAdmin,
+        userId: response.data.userId,
+        username: response.data.username,
+      };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'An unknown error occurred.';
-      console.error('Error during Google login:', errorMessage, err); // Log error details
+      console.error('Error during Google login:', errorMessage, err);
       return rejectWithValue(errorMessage);
     }
   }
 );
+
 
 
 
@@ -439,25 +472,24 @@ const authSlice = createSlice({
         state.error = payload || '';
       })
       
-       .addCase(googleLogin.pending, (state) => {
-        state.loading = true;  // Set loading state while the request is in progress
+        .addCase(googleLogin.pending, (state) => {
+        state.loading = true;
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
-        state.loading = false;  // Set loading to false once login is successful
-        state.user = {
-          username: action.payload.username,  // Assuming the payload contains 'username'
-          userId: action.payload.userId,      // Assuming the payload contains 'userId'
-          isAdmin: action.payload.isAdmin,    // Assuming the payload contains 'isAdmin'
-        };
-        state.token = action.payload.access; // Store the access token
-        state.isAdmin = action.payload.isAdmin; // Store the isAdmin flag
-        localStorage.setItem('token', action.payload.access);  // Save the token in localStorage
-        localStorage.setItem('isAdmin', action.payload.isAdmin);  // Save the isAdmin flag in localStorage
-        localStorage.setItem('username', action.payload.username);  // Save the username in localStorage
+        state.loading = false;
+        state.status = 'succeeded';
+        state.token = action.payload.token;
+        state.userId = action.payload.userId;
+        state.username = action.payload.username;
+        state.email = action.payload.email;
+        state.first_name = action.payload.first_name;
+        state.profile_picture = action.payload.profile_picture;
+        state.isAdmin = action.payload.isAdmin;
       })
       .addCase(googleLogin.rejected, (state, action) => {
-        state.loading = false;  // Set loading to false on failure
-        state.error = action.payload || 'Google login failed';  // Store error message
+        state.loading = false;
+        state.status = 'failed';
+        state.error = action.payload;
       })
       // Password reset request cases
       .addCase(requestPasswordReset.pending, (state) => {
