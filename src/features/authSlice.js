@@ -109,27 +109,57 @@ export const confirmPasswordReset = createAsyncThunk(
 
 
 
+// export const googleLogin = createAsyncThunk(
+//   'auth/googleLogin',
+//   async ({ idToken }, { rejectWithValue }) => {
+//     if (!idToken) {
+//       return rejectWithValue('ID token is missing');
+//     }
+//     console.log('googleLogin action dispatched with idToken:', idToken);
+
+//     try {
+//       const response = await axios.post('https://talkstream.xyz/api/auth/google/', { idToken });
+      
+//       // Update the token in local storage
+//       localStorage.setItem('token', response.data.token);
+
+//       return response.data;
+//     } catch (err) {
+//       const errorMessage = err.response?.data?.error || 'An unknown error occurred.';
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+
 export const googleLogin = createAsyncThunk(
   'auth/googleLogin',
   async ({ idToken }, { rejectWithValue }) => {
     if (!idToken) {
+      console.error('ID token is missing'); // Log the error
       return rejectWithValue('ID token is missing');
     }
-    console.log('googleLogin action dispatched with idToken:', idToken);
+
+    console.log('googleLogin action dispatched with idToken:', idToken); // Log the received token
 
     try {
       const response = await axios.post('https://talkstream.xyz/api/auth/google/', { idToken });
+      console.log('Google login successful, response data:', response.data); // Log the backend response
       
-      // Update the token in local storage
+      // Save token in localStorage
       localStorage.setItem('token', response.data.token);
+      console.log('Token saved to localStorage:', response.data.token);
 
       return response.data;
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'An unknown error occurred.';
+      console.error('Error during Google login:', errorMessage, err); // Log error details
       return rejectWithValue(errorMessage);
     }
   }
 );
+
+
 
 // Async thunk for Google login
 // export const googleLogin = createAsyncThunk(
