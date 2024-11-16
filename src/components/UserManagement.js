@@ -192,16 +192,7 @@ const UserList = () => {
                 {/* Search and Filter Wrapper */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                     {/* Search Input */}
-                    <div className="mb-4 md:mb-0 flex items-center relative">
-    <IoSearch className="absolute left-3 text-gray-500" />
-    <input
-        type="text"
-        placeholder="Search users..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out shadow-sm w-full"
-    />
-</div>
+                   
 
                     {/* Filter Dropdown */}
                     <div className="mb-4 md:mb-0">
