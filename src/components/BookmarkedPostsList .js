@@ -144,7 +144,7 @@ const BookmarkedPosts = () => {
               <div className="flex justify-between items-center text-sm text-gray-600">
                 <div className="flex items-center">
           
-          <span className="text-gray-600">{post.total_likes}</span>
+        
                   
                 </div>
                 <p>{post.total_bookmarks} bookmarks</p> {/* Displaying total bookmarks */}
