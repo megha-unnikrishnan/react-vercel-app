@@ -195,16 +195,7 @@ const UserList = () => {
 
 
 
-                    <div className="mb-4 md:mb-0 flex items-center">
-                        <IoSearch className="mr-2 text-gray-500" />
-                        <input
-                            type="text"
-                            placeholder="Search users..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out"
-                        />
-                    </div> 
+              
 
 
 
