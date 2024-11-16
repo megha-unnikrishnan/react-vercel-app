@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../features/authSlice";
-import { useDispatch } from "react-redux";
-import { IoSearch } from "react-icons/io5";
-import { HiHome, HiUser, HiDocumentReport, HiLogout } from "react-icons/hi";
-import { NavLink } from "react-router-dom";
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { logout } from '../features/authSlice';
+import { useDispatch } from 'react-redux';
+import { IoSearch } from 'react-icons/io5';
+import { HiHome, HiUser, HiDocumentReport, HiLogout } from 'react-icons/hi';
+import { NavLink } from 'react-router-dom';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
@@ -14,9 +15,8 @@ const UserList = () => {
     const [error, setError] = useState(null);
     const [loadingBlock, setLoadingBlock] = useState(false);
     const [loadingUnblock, setLoadingUnblock] = useState(false);
-    const [filter, setFilter] = useState("all");
-    const [searchTerm, setSearchTerm] = useState("");
-
+    const [filter, setFilter] = useState('all');
+    const [searchTerm, setSearchTerm] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -35,69 +35,56 @@ const UserList = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get("https://talkstream.xyz/api/user-view/", {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:8000/api/user-view/', {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const updatedUsers = response.data.map((user) => ({
+            const updatedUsers = response.data.map(user => ({
                 ...user,
-                is_suspended: user.is_suspended || false,
+                is_suspended: user.is_suspended !== undefined ? user.is_suspended : false,
             }));
             setUsers(updatedUsers);
             setFilteredUsers(updatedUsers);
         } catch (err) {
-            console.error("Error fetching users:", err);
-            setError("Failed to fetch users.");
+            console.error('Error fetching users:', err);
+            setError('Failed to fetch users.');
         } finally {
             setLoading(false);
         }
     };
 
     const searchUsers = async () => {
-    if (!searchTerm) {
-        setFilteredUsers(users);
-        console.log("Search Term is empty, showing all users.");
-        return;
-    }
+        if (!searchTerm) {
+            setFilteredUsers(users);
+            return;
+        }
 
-    try {
-        console.log(`Searching for users with term: ${searchTerm}`); // Log the search term being used
-        
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-            `https://talkstream.xyz/api/user-list-find/?q=${searchTerm}`,
-            {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`http://localhost:8000/api/user-list-find/?q=${searchTerm}`, {
                 headers: { Authorization: `Bearer ${token}` },
-            }
-        );
-        
-        console.log("Search response data:", response.data); // Log the response data from the API
-        setFilteredUsers(response.data);
-    } catch (err) {
-        console.error("Search Error:", err);
-        setError("Failed to search users.");
-    }
-};
-
+            });
+            setFilteredUsers(response.data);
+        } catch (err) {
+            console.error('Search Error:', err);
+            setError('Failed to search users.');
+        }
+    };
 
     const filterUsers = () => {
         let result = users;
 
-        if (filter === "active") {
-            result = result.filter((user) => !user.is_suspended);
-        } else if (filter === "blocked") {
-            result = result.filter((user) => user.is_suspended);
+        if (filter === 'active') {
+            result = result.filter(user => !user.is_suspended);
+        } else if (filter === 'blocked') {
+            result = result.filter(user => user.is_suspended);
         }
 
         if (searchTerm) {
-            result = result.filter(
-                (user) =>
-                    (user.first_name &&
-                        user.first_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                    (user.username &&
-                        user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                    (user.email &&
-                        user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+            result = result.filter(user =>
+                (user.first_name && user.first_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
             );
         }
 
@@ -107,20 +94,14 @@ const UserList = () => {
     const handleBlock = async (userId) => {
         setLoadingBlock(true);
         try {
-            const token = localStorage.getItem("token");
-            await axios.post(
-                `https://talkstream.xyz/api/users/${userId}/block/`,
-                {},
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-            setUsers(users.map((user) =>
-                user.id === userId ? { ...user, is_suspended: true } : user
-            ));
+            const token = localStorage.getItem('token');
+            await axios.post(`http://localhost:8000/api/users/${userId}/block/`, {}, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setUsers(users.map(user => (user.id === userId ? { ...user, is_suspended: true } : user)));
         } catch (err) {
-            console.error("Block Error:", err);
-            setError("Failed to block user.");
+            console.error('Block Error:', err);
+            setError('Failed to block user.');
         } finally {
             setLoadingBlock(false);
         }
@@ -129,20 +110,14 @@ const UserList = () => {
     const handleUnblock = async (userId) => {
         setLoadingUnblock(true);
         try {
-            const token = localStorage.getItem("token");
-            await axios.post(
-                `https://talkstream.xyz/api/users/${userId}/unblock/`,
-                {},
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-            setUsers(users.map((user) =>
-                user.id === userId ? { ...user, is_suspended: false } : user
-            ));
+            const token = localStorage.getItem('token');
+            await axios.post(`http://localhost:8000/api/users/${userId}/unblock/`, {}, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setUsers(users.map(user => (user.id === userId ? { ...user, is_suspended: false } : user)));
         } catch (err) {
-            console.error("Unblock Error:", err);
-            setError("Failed to unblock user.");
+            console.error('Unblock Error:', err);
+            setError('Failed to unblock user.');
         } finally {
             setLoadingUnblock(false);
         }
@@ -150,7 +125,7 @@ const UserList = () => {
 
     const handleLogout = () => {
         dispatch(logout());
-        navigate("/adminlogin");
+        navigate('/adminlogin');
     };
 
     if (loading) return <div className="text-center mt-10">Loading...</div>;
@@ -160,45 +135,48 @@ const UserList = () => {
         <div className="flex min-h-screen bg-gray-50">
             {/* Sidebar */}
             <aside className="w-64 bg-indigo-600 text-white shadow-lg fixed inset-y-0 left-0 flex flex-col">
-                <div className="flex items-center justify-center h-20 text-2xl font-bold tracking-wider border-b border-indigo-500">
-                    Admin Panel
+                 <div className="flex items-center justify-center h-20 text-2xl font-bold tracking-wider border-b border-indigo-500">
+                     Admin Panel
                 </div>
-                <nav className="flex-1 p-4 space-y-4">
-                    <NavLink
-                        to="/admin-dashboard"
-                        className={({ isActive }) =>
-                            `flex items-center p-4 rounded-md transition-colors ${
-                                isActive ? "bg-indigo-700" : "hover:bg-indigo-700"
-                            }`
+                 <nav className="flex-1 p-4 space-y-4">
+                     <NavLink 
+                        to="/admin-dashboard" 
+                        className={({ isActive }) => 
+                            `flex items-center p-4 rounded-md transition-colors ${isActive ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`
                         }
                     >
                         <HiHome className="w-6 h-6 mr-3" />
                         <span className="font-semibold">Dashboard</span>
                     </NavLink>
-                    <NavLink
-                        to="/admin-user"
-                        className={({ isActive }) =>
-                            `flex items-center p-4 rounded-md transition-colors ${
-                                isActive ? "bg-indigo-700" : "hover:bg-indigo-700"
-                            }`
+                    <NavLink 
+                        to="/admin-user" 
+                        className={({ isActive }) => 
+                            `flex items-center p-4 rounded-md transition-colors ${isActive ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`
                         }
                     >
                         <HiUser className="w-6 h-6 mr-3" />
                         <span className="font-semibold">Users</span>
                     </NavLink>
-                    <NavLink
-                        to="/reports"
-                        className={({ isActive }) =>
-                            `flex items-center p-4 rounded-md transition-colors ${
-                                isActive ? "bg-indigo-700" : "hover:bg-indigo-700"
-                            }`
+                    <NavLink 
+                        to="/activity-feed" 
+                        className={({ isActive }) => 
+                            `flex items-center p-4 rounded-md transition-colors ${isActive ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`
+                        }
+                    >
+                        <HiUser className="w-6 h-6 mr-3" />
+                        <span className="font-semibold">User Feed</span>
+                    </NavLink>
+                    <NavLink 
+                        to="/reports" 
+                        className={({ isActive }) => 
+                            `flex items-center p-4 rounded-md transition-colors ${isActive ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`
                         }
                     >
                         <HiDocumentReport className="w-6 h-6 mr-3" />
                         <span className="font-semibold">Reports</span>
                     </NavLink>
-                    <button
-                        onClick={handleLogout}
+                    <button 
+                        onClick={handleLogout} 
                         className="flex items-center w-full text-left p-4 rounded-md hover:bg-red-600 transition-colors mt-auto"
                     >
                         <HiLogout className="w-6 h-6 mr-3" />
@@ -209,30 +187,30 @@ const UserList = () => {
 
             {/* Main Content */}
             <div className="flex-1 ml-64 p-6">
-                <h1 className="text-2xl font-bold mb-4">User Management</h1>
+                <h1 className="text-2xl font-bold mb-4 text-gray-800">User Management</h1>
 
-                {/* Search and Filter */}
+                {/* Search and Filter Wrapper */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                    <div className="mb-4 md:mb-0 flex items-center">
-                        <IoSearch className="mr-2 text-gray-500" />
-                        <input
-                            type="text"
-                            placeholder="Search users..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out"
-                        />
-                    </div>
+                    {/* Search Input */}
+                    <div className="mb-4 md:mb-0 flex items-center relative">
+    <IoSearch className="absolute left-3 text-gray-500" />
+    <input
+        type="text"
+        placeholder="Search users..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out shadow-sm w-full"
+    />
+</div>
 
-                    <div>
-                        <label htmlFor="filter" className="mr-2 font-semibold">
-                            Filter:
-                        </label>
+                    {/* Filter Dropdown */}
+                    <div className="mb-4 md:mb-0">
+                        <label htmlFor="filter" className="mr-2 font-semibold">Filter:</label>
                         <select
                             id="filter"
                             value={filter}
                             onChange={(e) => setFilter(e.target.value)}
-                            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out"
+                            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out shadow-sm"
                         >
                             <option value="all">All</option>
                             <option value="active">Active</option>
@@ -242,54 +220,46 @@ const UserList = () => {
                 </div>
 
                 {/* Users Table */}
-                <table className="min-w-full bg-white border border-gray-300 rounded-lg">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-600 text-left">
-                            <th className="py-3 px-4 border-b">Name</th>
-                            <th className="py-3 px-4 border-b">Username</th>
-                            <th className="py-3 px-4 border-b">Email</th>
-                            <th className="py-3 px-4 border-b">Status</th>
-                            <th className="py-3 px-4 border-b">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredUsers.map((user) => (
-                            <tr key={user.id} className="hover:bg-gray-100">
-                                <td className="py-3 px-4 border-b">{user.first_name}</td>
-                                <td className="py-3 px-4 border-b">{user.username}</td>
-                                <td className="py-3 px-4 border-b">{user.email}</td>
-                                <td className="py-3 px-4 border-b">
-                                    {user.is_suspended ? "Blocked" : "Active"}
-                                </td>
-                                <td className="py-3 px-4 border-b">
-                                    {user.is_suspended ? (
-                                        <button
-                                            className={`text-green-600 font-semibold hover:underline ${loadingUnblock ? "opacity-50 pointer-events-none" : ""
-                                                }`}
-                                            onClick={() => handleUnblock(user.id)}
-                                            disabled={loadingUnblock}
-                                        >
-                                            Unblock
-                                        </button>
-                                    ) : (
-                                        <button
-                                            className={`text-red-600 font-semibold hover:underline ${loadingBlock ? "opacity-50 pointer-events-none" : ""
-                                                }`}
-                                            onClick={() => handleBlock(user.id)}
-                                            disabled={loadingBlock}
-                                        >
-                                            Block
-                                        </button>
-                                    )}
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
+                        <thead>
+                            <tr className="bg-gray-100 text-gray-600">
+                                <th className="py-2 px-4 text-left border-b">Name</th>
+                                <th className="py-2 px-4 text-left border-b">Email</th>
+                                <th className="py-2 px-4 text-left border-b">Status</th>
+                                <th className="py-2 px-4 text-left border-b">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                {filteredUsers.length === 0 && (
-                    <div className="text-center py-6">No users found.</div>
-                )}
+                        </thead>
+                        <tbody>
+                            {filteredUsers.map(user => (
+                                <tr key={user.id} className="hover:bg-gray-50 transition-colors duration-300">
+                                    <td className="py-2 px-4 border-b">{user.first_name} {user.last_name}</td>
+                                    <td className="py-2 px-4 border-b">{user.email}</td>
+                                    <td className="py-2 px-4 border-b">{user.is_suspended ? 'Blocked' : 'Active'}</td>
+                                    <td className="py-2 px-4 border-b flex space-x-2">
+                                        {user.is_suspended ? (
+                                            <button 
+                                                onClick={() => handleUnblock(user.id)} 
+                                                disabled={loadingUnblock}
+                                                className={`bg-blue-500 text-white px-3 py-1 rounded transition duration-300 ease-in-out hover:bg-blue-600 ${loadingUnblock ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            >
+                                                {loadingUnblock ? 'Unblocking...' : 'Unblock'}
+                                            </button>
+                                        ) : (
+                                            <button 
+                                                onClick={() => handleBlock(user.id)} 
+                                                disabled={loadingBlock}
+                                                className={`bg-red-500 text-white px-3 py-1 rounded transition duration-300 ease-in-out hover:bg-red-600 ${loadingBlock ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            >
+                                                {loadingBlock ? 'Blocking...' : 'Block'}
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
