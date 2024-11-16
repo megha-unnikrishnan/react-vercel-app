@@ -139,11 +139,14 @@ const UserLogin = () => {
                 </div>
 
                 <div className="mt-6 text-center">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-4">Or login with Google</h2>
+                    
                     <div className="flex justify-center">
                      
                     </div>
                 </div>
+
+
+
                         
             </div>
 
