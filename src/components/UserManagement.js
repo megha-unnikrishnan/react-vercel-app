@@ -54,25 +54,31 @@ const UserList = () => {
     };
 
     const searchUsers = async () => {
-        if (!searchTerm) {
-            setFilteredUsers(users);
-            return;
-        }
+    if (!searchTerm) {
+        setFilteredUsers(users);
+        console.log("Search Term is empty, showing all users.");
+        return;
+    }
 
-        try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get(
-                `https://talkstream.xyz/api/user-list-find/?q=${searchTerm}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-            setFilteredUsers(response.data);
-        } catch (err) {
-            console.error("Search Error:", err);
-            setError("Failed to search users.");
-        }
-    };
+    try {
+        console.log(`Searching for users with term: ${searchTerm}`); // Log the search term being used
+        
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+            `https://talkstream.xyz/api/user-list-find/?q=${searchTerm}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        
+        console.log("Search response data:", response.data); // Log the response data from the API
+        setFilteredUsers(response.data);
+    } catch (err) {
+        console.error("Search Error:", err);
+        setError("Failed to search users.");
+    }
+};
+
 
     const filterUsers = () => {
         let result = users;
