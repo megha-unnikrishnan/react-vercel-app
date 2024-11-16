@@ -21,22 +21,22 @@ const UserList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchUsers();
+        fetchUsers(); // Fetch all users on component mount
     }, []);
 
     useEffect(() => {
-        filterUsers();
+        filterUsers(); // Filter users whenever filter or users changes
     }, [filter, users]);
 
     useEffect(() => {
-        searchUsers();
+        searchUsers(); // Search users whenever searchTerm changes
     }, [searchTerm]);
 
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8000/api/user-view/', {
+            const response = await axios.get('https://talkstream.xyz/api/user-view/', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const updatedUsers = response.data.map(user => ({
@@ -55,16 +55,17 @@ const UserList = () => {
 
     const searchUsers = async () => {
         if (!searchTerm) {
+            // If no search term, reset filtered users to all users
             setFilteredUsers(users);
             return;
         }
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`http://localhost:8000/api/user-list-find/?q=${searchTerm}`, {
+            const response = await axios.get(`https://talkstream.xyz/api/user-list-find/?q=${searchTerm}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            setFilteredUsers(response.data);
+            setFilteredUsers(response.data); // Set filtered users directly
         } catch (err) {
             console.error('Search Error:', err);
             setError('Failed to search users.');
@@ -82,20 +83,19 @@ const UserList = () => {
 
         if (searchTerm) {
             result = result.filter(user =>
-                (user.first_name && user.first_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                (user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (user.first_name && user.first_name.toLowerCase().includes(searchTerm.toLowerCase())) || (user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
                 (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
             );
         }
 
         setFilteredUsers(result);
     };
-
+ 
     const handleBlock = async (userId) => {
         setLoadingBlock(true);
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:8000/api/users/${userId}/block/`, {}, {
+            await axios.post(`https://talkstream.xyz/api/users/${userId}/block/`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUsers(users.map(user => (user.id === userId ? { ...user, is_suspended: true } : user)));
@@ -111,7 +111,7 @@ const UserList = () => {
         setLoadingUnblock(true);
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:8000/api/users/${userId}/unblock/`, {}, {
+            await axios.post(`https://talkstream.xyz/api/users/${userId}/unblock/`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUsers(users.map(user => (user.id === userId ? { ...user, is_suspended: false } : user)));
@@ -135,11 +135,11 @@ const UserList = () => {
         <div className="flex min-h-screen bg-gray-50">
             {/* Sidebar */}
             <aside className="w-64 bg-indigo-600 text-white shadow-lg fixed inset-y-0 left-0 flex flex-col">
-                 <div className="flex items-center justify-center h-20 text-2xl font-bold tracking-wider border-b border-indigo-500">
-                     Admin Panel
+                <div className="flex items-center justify-center h-20 text-2xl font-bold tracking-wider border-b border-indigo-500">
+                    Admin Panel
                 </div>
-                 <nav className="flex-1 p-4 space-y-4">
-                     <NavLink 
+                <nav className="flex-1 p-4 space-y-4">
+                    <NavLink 
                         to="/admin-dashboard" 
                         className={({ isActive }) => 
                             `flex items-center p-4 rounded-md transition-colors ${isActive ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`
@@ -186,13 +186,27 @@ const UserList = () => {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 ml-64 p-6">
-                <h1 className="text-2xl font-bold mb-4 text-gray-800">User Management</h1>
+            <div className="flex-1 ml-64 p-6" style={{marginLeft:'20%'}}>
+                <h1 className="text-2xl font-bold mb-4">User Management</h1>
 
                 {/* Search and Filter Wrapper */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                     {/* Search Input */}
-                   
+
+
+
+                    <div className="mb-4 md:mb-0 flex items-center">
+                        <IoSearch className="mr-2 text-gray-500" />
+                        <input
+                            type="text"
+                            placeholder="Search users..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out"
+                        />
+                    </div> 
+
+
 
                     {/* Filter Dropdown */}
                     <div className="mb-4 md:mb-0">
@@ -201,7 +215,7 @@ const UserList = () => {
                             id="filter"
                             value={filter}
                             onChange={(e) => setFilter(e.target.value)}
-                            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out shadow-sm"
+                            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400 transition-all duration-300 ease-in-out"
                         >
                             <option value="all">All</option>
                             <option value="active">Active</option>
@@ -211,46 +225,46 @@ const UserList = () => {
                 </div>
 
                 {/* Users Table */}
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
-                        <thead>
-                            <tr className="bg-gray-100 text-gray-600">
-                                <th className="py-2 px-4 text-left border-b">Name</th>
-                                <th className="py-2 px-4 text-left border-b">Email</th>
-                                <th className="py-2 px-4 text-left border-b">Status</th>
-                                <th className="py-2 px-4 text-left border-b">Actions</th>
+                <table className="min-w-full bg-white border border-gray-300 rounded-lg">
+                    <thead>
+                        <tr className="bg-gray-100 text-gray-600 text-left">
+                            <th className="py-3 px-4 border-b">Name</th>
+                            <th className="py-3 px-4 border-b">Username</th>
+                            <th className="py-3 px-4 border-b">Email</th>
+                            <th className="py-3 px-4 border-b">Status</th>
+                            <th className="py-3 px-4 border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredUsers.map(user => (
+                            <tr key={user.id} className="hover:bg-gray-50">
+                                <td className="py-2 px-4 border-b">{user.first_name}</td>
+                                <td className="py-2 px-4 border-b">{user.username}</td>
+                                <td className="py-2 px-4 border-b">{user.email}</td>
+                                <td className="py-2 px-4 border-b">{user.is_suspended ? 'Blocked' : 'Active'}</td>
+                                <td className="py-2 px-4 border-b">
+                                    {user.is_suspended ? (
+                                        <button 
+                                            onClick={() => handleUnblock(user.id)} 
+                                            disabled={loadingUnblock}
+                                            className={`text-green-600 hover:underline ${loadingUnblock ? 'cursor-not-allowed' : ''}`}
+                                        >
+                                            {loadingUnblock ? 'Unblocking...' : 'Unblock'}
+                                        </button>
+                                    ) : (
+                                        <button 
+                                            onClick={() => handleBlock(user.id)} 
+                                            disabled={loadingBlock}
+                                            className={`text-red-600 hover:underline ${loadingBlock ? 'cursor-not-allowed' : ''}`}
+                                        >
+                                            {loadingBlock ? 'Blocking...' : 'Block'}
+                                        </button>
+                                    )}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {filteredUsers.map(user => (
-                                <tr key={user.id} className="hover:bg-gray-50 transition-colors duration-300">
-                                    <td className="py-2 px-4 border-b">{user.first_name} {user.last_name}</td>
-                                    <td className="py-2 px-4 border-b">{user.email}</td>
-                                    <td className="py-2 px-4 border-b">{user.is_suspended ? 'Blocked' : 'Active'}</td>
-                                    <td className="py-2 px-4 border-b flex space-x-2">
-                                        {user.is_suspended ? (
-                                            <button 
-                                                onClick={() => handleUnblock(user.id)} 
-                                                disabled={loadingUnblock}
-                                                className={`bg-blue-500 text-white px-3 py-1 rounded transition duration-300 ease-in-out hover:bg-blue-600 ${loadingUnblock ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                            >
-                                                {loadingUnblock ? 'Unblocking...' : 'Unblock'}
-                                            </button>
-                                        ) : (
-                                            <button 
-                                                onClick={() => handleBlock(user.id)} 
-                                                disabled={loadingBlock}
-                                                className={`bg-red-500 text-white px-3 py-1 rounded transition duration-300 ease-in-out hover:bg-red-600 ${loadingBlock ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                            >
-                                                {loadingBlock ? 'Blocking...' : 'Block'}
-                                            </button>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
