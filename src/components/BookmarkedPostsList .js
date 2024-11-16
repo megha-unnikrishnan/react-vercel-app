@@ -143,13 +143,13 @@ const BookmarkedPosts = () => {
               
               <div className="flex justify-between items-center text-sm text-gray-600">
                 <div className="flex items-center">
-                <button type="button" onClick={() => handleLikeToggle(post)}>
-            {likedPosts.includes(post.id) ? (
-              <FaRegThumbsUp className="h-5 w-5 text-blue-500 hover:text-blue-700 transition duration-200" />
-            ) : (
-              <FaRegThumbsUp className="h-5 w-5 text-gray-500 hover:text-gray-700 transition duration-200" />
-            )}
-          </button>
+          //       <button type="button" onClick={() => handleLikeToggle(post)}>
+          //   {likedPosts.includes(post.id) ? (
+          //     <FaRegThumbsUp className="h-5 w-5 text-blue-500 hover:text-blue-700 transition duration-200" />
+          //   ) : (
+          //     <FaRegThumbsUp className="h-5 w-5 text-gray-500 hover:text-gray-700 transition duration-200" />
+          //   )}
+          // </button>
           <span className="text-gray-600">{post.total_likes}</span>
                   
                 </div>
