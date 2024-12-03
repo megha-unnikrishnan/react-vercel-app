@@ -145,7 +145,7 @@ const UserLogin = () => {
                     </div>
                 </div>
 
-<GoogleLoginButton />
+
 
                         
             </div>
